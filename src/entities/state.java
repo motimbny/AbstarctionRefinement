@@ -1,12 +1,11 @@
 package entities;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class state
 {
 	 String name;
-	 List<state> neighbours;
+	 ArrayList<state> neighbours;
 	 public state(String name)
 	 {
 		 this.name=name;
@@ -17,6 +16,18 @@ public class state
     	 this.name=name;
     	 this.neighbours=neighbours;    	 
      }
+     public String getName() {
+ 		return name;
+ 	}
+ 	public void setName(String name) {
+ 		this.name = name;
+ 	}
+ 	public ArrayList<state> getNeighbours() {
+ 		return neighbours;
+ 	}
+ 	public void setNeighbours(ArrayList<state> neighbours) {
+ 		this.neighbours = neighbours;
+ 	}
      public void removeNeighbour(state toRemove)
      {
     	 neighbours.remove(toRemove);
