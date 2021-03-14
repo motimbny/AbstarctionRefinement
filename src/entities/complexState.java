@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class complexState 
 {
-	String name;
-	ArrayList<state> containingStates; 
-	ArrayList<complexState> neighbours;
+	private String name;
+	private ArrayList<state> containingStates; 
+	private ArrayList<complexState> neighbours;
 	public complexState(String name)
 	{
 		this.name=name;

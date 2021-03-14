@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class state
 {
-	 String name;
-	 ArrayList<state> neighbours;
+	 private String name;
+	 private ArrayList<state> neighbours;
 	 public state(String name)
 	 {
 		 this.name=name;

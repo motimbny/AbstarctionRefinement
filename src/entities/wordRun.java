@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class wordRun 
 {
-	ArrayList<complexState> run;
+	private ArrayList<complexState> run;
 	public wordRun()
 	{
 		 run=new ArrayList<complexState>();
