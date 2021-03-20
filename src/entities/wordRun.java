@@ -4,20 +4,20 @@ import java.util.ArrayList;
 
 public class wordRun 
 {
-	private ArrayList<complexState> run;
+	private ArrayList<ComplexState> run;
 	public wordRun()
 	{
-		 run=new ArrayList<complexState>();
+		 run=new ArrayList<ComplexState>();
 	}
-    public wordRun(ArrayList<complexState> run)
+    public wordRun(ArrayList<ComplexState> run)
     {
     	this.run=run;
     }
-    public ArrayList<complexState> getRun()
+    public ArrayList<ComplexState> getRun()
     {
     	return run;
     }
-    public void updateRun(ArrayList<complexState> run)
+    public void updateRun(ArrayList<ComplexState> run)
     {
     	this.run=run;
     }
