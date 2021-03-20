@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.firstPgCNT">
+   <children>
+      <Label layoutX="187.0" layoutY="20.0" prefHeight="98.0" prefWidth="200.0" text="Abstraction refinement " textAlignment="CENTER" textOverrun="CLIP">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <Label layoutX="152.0" layoutY="54.0" prefHeight="98.0" prefWidth="299.0" text="based MultiLTL model-checking" textAlignment="CENTER" textOverrun="CLIP">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <Label layoutX="35.0" layoutY="171.0" text="Please insert a multi-model:" />
+      <Label layoutX="35.0" layoutY="207.0" text="Please insert aMultiLTL formula:" />
+      <Button fx:id="continureBTN" layoutX="238.0" layoutY="264.0" mnemonicParsing="false" onMouseClicked="#continuePage" prefHeight="25.0" prefWidth="102.0" text="Continue" />
+      <TextField fx:id="multiModelInput" editable="false" layoutX="217.0" layoutY="167.0" prefHeight="25.0" prefWidth="271.0" />
+      <TextField fx:id="multiLTLInput" editable="false" layoutX="217.0" layoutY="203.0" prefHeight="25.0" prefWidth="271.0" />
+      <ImageView fx:id="multiModelClip" fitHeight="25.0" fitWidth="24.0" layoutX="502.0" layoutY="167.0" onMouseClicked="#openMultiModelChose" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="multiLTLClip" fitHeight="25.0" fitWidth="24.0" layoutX="502.0" layoutY="203.0" onMouseClicked="#openMultiltlChose" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</Pane>
