@@ -13,8 +13,16 @@ public class Transition
 		this.destinationState = destinationState;
 	}
 	
-	public State getDestinationState(State currentState, AtomicProp input)
+	public State getDestinationState()
 	{
 		return this.destinationState;
+	}
+	
+	public State getCurrentState() {
+		return currentState;
+	}
+
+	public AtomicProp getInput() {
+		return input;
 	}
 }

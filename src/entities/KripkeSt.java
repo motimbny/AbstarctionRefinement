@@ -7,53 +7,53 @@ import enums.kripkeType;
 
 public class KripkeSt 
 {
-	private ArrayList<ComplexState> Sk;
-	private ArrayList<ComplexState> Ik;
-	private HashMap<ComplexState,ArrayList<ComplexState>> Rk; 
-	private HashMap<ComplexState, ArrayList<AtomicProp>> Lk; 
+	private ArrayList<ComplexState> states;
+	private ArrayList<ComplexState> initialStates;
+	private HashMap<ComplexState,ArrayList<ComplexState>> transitionRelation; 
+	private HashMap<ComplexState, ArrayList<AtomicProp>> labelingFunction; 
     private kripkeType type;
     private int counter;
     public KripkeSt()
     {
-    	Sk=new ArrayList<ComplexState>();
-    	Ik=new ArrayList<ComplexState>();
-    	Rk=new HashMap<ComplexState,ArrayList<ComplexState> >(); 
-    	Lk=new HashMap<ComplexState, ArrayList<AtomicProp>>();
+    	states=new ArrayList<ComplexState>();
+    	initialStates=new ArrayList<ComplexState>();
+    	transitionRelation=new HashMap<ComplexState,ArrayList<ComplexState> >(); 
+    	labelingFunction=new HashMap<ComplexState, ArrayList<AtomicProp>>();
     	type=kripkeType.Regular;
     	counter=0;
     }
-    public KripkeSt(ArrayList<ComplexState> Sk,ArrayList<ComplexState> Ik,HashMap<ComplexState,ArrayList<ComplexState> > Rk,HashMap<ComplexState,ArrayList<AtomicProp>> Lk,kripkeType type, int counter)
+    public KripkeSt(ArrayList<ComplexState> Sk,ArrayList<ComplexState> Ik,HashMap<ComplexState,ArrayList<ComplexState> > Rk,HashMap<ComplexState,ArrayList<AtomicProp>> Lk)
     {
-    	this.Sk=new ArrayList<ComplexState>();
-    	this.Ik=new ArrayList<ComplexState>();
-    	this.Rk=new HashMap<ComplexState,ArrayList<ComplexState> >(); 
-    	this.Lk=new HashMap<ComplexState, ArrayList<AtomicProp>>();
+    	this.states=new ArrayList<ComplexState>();
+    	this.initialStates=new ArrayList<ComplexState>();
+    	this.transitionRelation=new HashMap<ComplexState,ArrayList<ComplexState> >(); 
+    	this.labelingFunction=new HashMap<ComplexState, ArrayList<AtomicProp>>();
     	this.type=kripkeType.Regular;
     	this.counter=0;
     }
 	public ArrayList<ComplexState> getSk() {
-		return Sk;
+		return states;
 	}
-	public void setSk(ArrayList<ComplexState> sk) {
-		Sk = sk;
+	public void setStates(ArrayList<ComplexState> sk) {
+		states = sk;
 	}
 	public ArrayList<ComplexState> getIk() {
-		return Ik;
+		return initialStates;
 	}
-	public void setIk(ArrayList<ComplexState> ik) {
-		Ik = ik;
+	public void setInitialStates(ArrayList<ComplexState> ik) {
+		initialStates = ik;
 	}
 	public HashMap<ComplexState, ArrayList<ComplexState>> getRk() {
-		return Rk;
+		return transitionRelation;
 	}
 	public void setRk(HashMap<ComplexState, ArrayList<ComplexState>> rk) {
-		Rk = rk;
+		transitionRelation = rk;
 	}
 	public HashMap<ComplexState, ArrayList<AtomicProp>> getLk() {
-		return Lk;
+		return labelingFunction;
 	}
 	public void setLk(HashMap<ComplexState, ArrayList<AtomicProp>> lk) {
-		Lk = lk;
+		labelingFunction = lk;
 	}
 	public kripkeType getType() {
 		return type;
