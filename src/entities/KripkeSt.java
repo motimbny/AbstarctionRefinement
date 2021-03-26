@@ -74,10 +74,55 @@ public class KripkeSt
 		this.counter--;
 	}
 	
+	/**
+     * Returns a string that contains all the characteristics of the kripke structure.
+     */
+    public String toString()
+    {
+    	StringBuilder statesStr = new StringBuilder("States: { ");
+    	for(ComplexState state: states)
+    		statesStr.append(state.getName() + ", ");
+    	statesStr.deleteCharAt(statesStr.length()-2);
+    	statesStr.append("}\n");
+    	StringBuilder initStatesStr = new StringBuilder("Initial states: { ");
+    	for(ComplexState state: initialStates)
+    		initStatesStr.append(state.getName() + ", ");
+    	initStatesStr.deleteCharAt(initStatesStr.length()-2);
+    	initStatesStr.append("}\n");
+    	StringBuilder transitionFuncStr = new StringBuilder("Transition relation: { ");
+    	ArrayList<ComplexState> destStates = new ArrayList<ComplexState>();
+    	for(ComplexState srcState: states) 
+    	{
+    		destStates = transitionRelation.get(srcState);
+    		for(ComplexState destState: destStates)
+    			transitionFuncStr.append("( " + srcState.getName() + ", " + destState.getName() + " ), " );	
+    	}
+    	transitionFuncStr.deleteCharAt(transitionFuncStr.length()-2);
+    	transitionFuncStr.append("}\n");
+    	StringBuilder labelingFuncStr = new StringBuilder("Labeling function: { ");
+    	ArrayList<AtomicProp> atomicProps = new ArrayList<AtomicProp>();
+    	for(ComplexState state: states) 
+    	{
+    		labelingFuncStr.append("( " + state.getName() + ", {");
+    		atomicProps = labelingFunction.get(state);
+    		for(AtomicProp ap: atomicProps)
+    			labelingFuncStr.append(ap.getName() + ", ");
+    		labelingFuncStr.deleteCharAt(labelingFuncStr.length()-2);
+    		labelingFuncStr.append("} ), ");
+    	}
+    	labelingFuncStr.deleteCharAt(labelingFuncStr.length()-2);
+    	labelingFuncStr.append("}\n");    	
+    	String result = statesStr.toString() + initStatesStr.toString() + transitionFuncStr.toString() + labelingFuncStr.toString() + "Type: " + type.toString() + "\nCount:" + counter;
+    	return result;
+    }
 	
 	public Automata convertToAutomata()
 	{
 		return null;
 	}
 
+	public static void main(String[]args)
+	{
+		
+	}
 }
