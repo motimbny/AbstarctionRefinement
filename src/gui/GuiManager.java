@@ -1,3 +1,4 @@
+package gui;
 
 
 import java.io.IOException;
@@ -11,7 +12,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class GuiManager 
@@ -23,7 +23,7 @@ public class GuiManager
 			put(SCREENS.firstp, "/gui/FirstPage.fxml");
 			put(SCREENS.secondp,"/gui/secondPage.fxml");
 			put(SCREENS.thirdp,"/gui/thirdPage.fxml");
-			put(SCREENS.thirdp,"/gui/fourthPage.fxml");
+			put(SCREENS.fourthp,"/gui/fourthPage.fxml");
 		}
 	};
 	

@@ -2,5 +2,5 @@ package enums;
 
 public enum SCREENS 
 {
-    firstp,secondp,thirdp,fourthp
+    firstp,secondp,thirdp,fourthp;
 }
