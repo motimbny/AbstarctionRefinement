@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.thirdPgCNT">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.thirdPgCNT">
    <children>
       <Label layoutX="225.0" layoutY="142.0" prefHeight="40.0" prefWidth="121.0" text="Running Time" textAlignment="CENTER" textOverrun="CLIP">
          <font>
@@ -21,12 +21,12 @@
          </font>
       </Label>
       <Button fx:id="resBTN" layoutX="234.0" layoutY="306.0" mnemonicParsing="false" onMouseClicked="#viewFinalRes" prefHeight="25.0" prefWidth="115.0" text="View final result   " textAlignment="CENTER" />
-      <ImageView fx:id="backToSecondPageBTN" fitHeight="27.0" fitWidth="35.0" layoutX="22.0" layoutY="19.0" onMouseClicked="#backToSecondPage" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="backToSecondPageBTN" fitHeight="44.0" fitWidth="56.0" layoutX="22.0" layoutY="19.0" onMouseClicked="#backToSecondPage" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/Capture.JPG" />
          </image>
       </ImageView>
-      <Label fx:id="resShow" layoutX="307.0" layoutY="239.0" text="M |= P">
+      <Label fx:id="resShow" layoutX="307.0" layoutY="239.0" styleClass="labellow" text="M |= P">
          <font>
             <Font size="18.0" />
          </font>
@@ -37,5 +37,6 @@
             <Image url="@../images/Spinner-1s-200px.gif" />
          </image>
       </ImageView>
+      <Label layoutX="72.0" layoutY="29.0" styleClass="labellow" text="back" />
    </children>
 </Pane>

@@ -1,0 +1,29 @@
+.root { 
+    -fx-background-image:url("/images/back.png");
+    -fx-background-size: 100% 100%; 
+    -fx-base: white;
+    -fx-control-inner-background: derive(-fx-base,50%);
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background, 30%);
+}
+.label{
+    -fx-text-fill: #F79710;
+    -fx-background-color:white;
+
+}
+.labellow{
+	-fx-background-color:white;
+    -fx-text-fill: black;
+}
+.button
+{
+	-fx-text-fill:white;
+	-fx-background-color:#4079A8;
+	-fx-border-width:4px;
+   
+} 
+
+.button:hover
+{
+	 -fx-background-color: black;
+	 -fx-text-fill: white;
+}
