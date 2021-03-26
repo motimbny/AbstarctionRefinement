@@ -1,4 +1,5 @@
 import enums.SCREENS;
+import gui.GuiManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
