@@ -73,6 +73,8 @@ public class KripkeSt
 	public void removeCount() {
 		this.counter--;
 	}
+	
+	
 	public Automata convertToAutomata()
 	{
 		return null;

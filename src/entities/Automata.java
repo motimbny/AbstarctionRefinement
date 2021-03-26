@@ -195,10 +195,40 @@ public class Automata
     }
     
     /**
+     * Returns a string that contains all the characteristics of the automata.
+     */
+    public String toString()
+    {
+    	StringBuilder statesStr = new StringBuilder("States: { ");
+    	for(State state: states)
+    		statesStr.append(state.getName() + ", ");
+    	statesStr.deleteCharAt(statesStr.length()-2);
+    	statesStr.append("}\n");
+    	StringBuilder alphabetStr = new StringBuilder("Alphabet: { ");
+    	for(AtomicProp input: alphabet)
+    		alphabetStr.append(input.getName() + ", ");
+    	alphabetStr.deleteCharAt(alphabetStr.length()-2);
+    	alphabetStr.append("}\n");
+    	String initStateStr = new String("Initial state: " + startState.getName() + "\n");
+    	StringBuilder acceptStatesStr = new StringBuilder("Accept states: { ");
+    	for(State state: acceptStates)
+    		acceptStatesStr.append(state.getName() + ", ");
+    	acceptStatesStr.deleteCharAt(acceptStatesStr.length()-2);
+    	acceptStatesStr.append("}\n");    	
+    	StringBuilder transitionFuncStr = new StringBuilder("Transition function: { ");
+    	for(Transition trans: transitionFunction)
+    		transitionFuncStr.append("( " + trans.getCurrentState().getName() + ", " + trans.getInput().getName() + " ) -> " + trans.getDestinationState().getName() + ",\n\t\t\t");
+    	transitionFuncStr.delete(transitionFuncStr.length()-5, transitionFuncStr.length()-1);
+    	transitionFuncStr.append("}\n");   
+    	String result = statesStr.toString() + alphabetStr.toString() + initStateStr + acceptStatesStr.toString() + transitionFuncStr.toString();
+    	return result;
+    }
+    
+    /**
      * for test getPath method
      * @param args
      */
-/*	public static void main(String[]args) 
+	public static void main(String[]args) 
 	{
 		State q0 = new State("q0"); 
 		State q1 = new State("q1"); 
@@ -228,45 +258,35 @@ public class Automata
 		states.add(q4);
 		states.add(q5);
 		states.add(q6);
-		ArrayList<AtomicProp> alphabet = null;
-		ArrayList<State> acceptStates = null;
-		AtomicProp p= new AtomicProp();
-		Transition q0q1 = new Transition(q0, p, q1);
-		Transition q0q2 = new Transition(q0, p, q2);
-		Transition q1q3 = new Transition(q1, p, q3);
-		Transition q2q0 = new Transition(q2, p, q0);
-		Transition q2q5 = new Transition(q2, p, q5);
-		Transition q2q6 = new Transition(q2, p, q6);
-		Transition q3q1 = new Transition(q3, p, q1);
-		Transition q3q4 = new Transition(q3, p, q4);
-		Transition q4q2 = new Transition(q4, p, q2);
-		Transition q4q3 = new Transition(q4, p, q3);
-		Transition q5q4 = new Transition(q5, p, q4);
-		Transition q5q6 = new Transition(q5, p, q6);
-		Transition q6q5 = new Transition(q6, p, q5);
+		AtomicProp p= new AtomicProp("a");
+		ArrayList<AtomicProp> alphabet = new ArrayList<AtomicProp>();
+		alphabet.add(p);
+		ArrayList<State> acceptStates = new ArrayList<State>();
+		acceptStates.add(q6);		
 		ArrayList<Transition> transitionFunction = new ArrayList<Transition>();
-		transitionFunction.add(q0q1);
-		transitionFunction.add(q0q2);
-		transitionFunction.add(q1q3);
-		transitionFunction.add(q2q0);
-		transitionFunction.add(q2q5);
-		transitionFunction.add(q2q6);
-		transitionFunction.add(q3q1);
-		transitionFunction.add(q3q4);
-		transitionFunction.add(q4q2);
-		transitionFunction.add(q4q3);
-		transitionFunction.add(q5q4);
-		transitionFunction.add(q5q6);
-		transitionFunction.add(q6q5);
 		Automata automat = new Automata(q2, states, alphabet, acceptStates, transitionFunction);
+		automat.addTransitionRelation(q0, p, q1);
+		automat.addTransitionRelation(q0, p, q2);
+		automat.addTransitionRelation(q1, p, q3);
+		automat.addTransitionRelation(q2, p, q0);
+		automat.addTransitionRelation(q2, p, q5);
+		automat.addTransitionRelation(q2, p, q6);
+		automat.addTransitionRelation(q3, p, q1);
+		automat.addTransitionRelation(q3, p, q4);
+		automat.addTransitionRelation(q4, p, q2);
+		automat.addTransitionRelation(q4, p, q3);
+		automat.addTransitionRelation(q5, p, q4);
+		automat.addTransitionRelation(q5, p, q6);
+		automat.addTransitionRelation(q6, p, q5);
 		automat.getPath();
-	}*/
+		System.out.println("\n" + automat.toString());
+	}
     
     /**
      * for test getComplementAutomata method
      * @param args
      */
-/*    public static void main(String[]args) 
+ /*   public static void main(String[]args) 
 	{
 		State q0 = new State("q0"); 
 		State q1 = new State("q1"); 
@@ -296,10 +316,11 @@ public class Automata
 		states.add(q4);
 		states.add(q5);
 		states.add(q6);
-		ArrayList<AtomicProp> alphabet = null;
+		AtomicProp p= new AtomicProp("a");
+		ArrayList<AtomicProp> alphabet = new ArrayList<AtomicProp>();
+		alphabet.add(p);
 		ArrayList<State> acceptStates = new ArrayList<State>();
-		acceptStates.add(q0);		
-		AtomicProp p= new AtomicProp();
+		acceptStates.add(q6);		
 		ArrayList<Transition> transitionFunction = new ArrayList<Transition>();
 		Automata automat = new Automata(q2, states, alphabet, acceptStates, transitionFunction);
 		automat.addTransitionRelation(q0, p, q1);
