@@ -23,7 +23,7 @@ public class Automata
 		this.transitionFunction = transitionFunction;
 	}
    
-   public State getStartState() {
+    public State getStartState() {
 		return startState;
 	}
 	public void setStartState(State startState) {
@@ -127,7 +127,7 @@ public class Automata
 		HashMap<State, List<State>> adjList = new HashMap<>();
 		HashMap<State, State> parent = new HashMap<State, State>();
 		State que[] = new State[states.size()];
-		Arrays.fill(que, -1);
+		Arrays.fill(que, null);
 		HashMap<State, Boolean> visited = new HashMap<State, Boolean>();
 		List<State> tmp;
 		for(State state: states)
@@ -174,7 +174,7 @@ public class Automata
 	}
 	
 	// Function to save the path from
-    static LinkedList<State> insertPathToList(HashMap<State, State> parent, State source, State detenation)
+    private LinkedList<State> insertPathToList(HashMap<State, State> parent, State source, State detenation)
     {
     	LinkedList<State> path = new LinkedList<>();
         // The while loop will stop only when the
@@ -186,9 +186,137 @@ public class Automata
             // stores the node through which
             // the current node has been reached
             path.addFirst(detenation);
+            System.out.print(detenation.getName() + " <- "); //for testing
             detenation = parent.get(detenation);
         }
         path.addFirst(detenation);
+        System.out.println(detenation.getName());   //for testing
         return path;
     }
+    
+    /**
+     * for test getPath method
+     * @param args
+     */
+/*	public static void main(String[]args) 
+	{
+		State q0 = new State("q0"); 
+		State q1 = new State("q1"); 
+		State q2 = new State("q2"); 
+		State q3 = new State("q3"); 
+		State q4 = new State("q4"); 
+		State q5 = new State("q5"); 
+		State q6 = new State("q6"); 
+		q0.addNeighbour(q1);
+		q0.addNeighbour(q2);
+		q1.addNeighbour(q3);
+		q2.addNeighbour(q0);
+		q2.addNeighbour(q5);
+		q2.addNeighbour(q6);
+		q3.addNeighbour(q1);
+		q3.addNeighbour(q4);
+		q4.addNeighbour(q2);
+		q4.addNeighbour(q3);
+		q5.addNeighbour(q4);
+		q5.addNeighbour(q6);
+		q6.addNeighbour(q5);
+		ArrayList<State> states = new ArrayList<State>();
+		states.add(q0);
+		states.add(q1);
+		states.add(q2);
+		states.add(q3);
+		states.add(q4);
+		states.add(q5);
+		states.add(q6);
+		ArrayList<AtomicProp> alphabet = null;
+		ArrayList<State> acceptStates = null;
+		AtomicProp p= new AtomicProp();
+		Transition q0q1 = new Transition(q0, p, q1);
+		Transition q0q2 = new Transition(q0, p, q2);
+		Transition q1q3 = new Transition(q1, p, q3);
+		Transition q2q0 = new Transition(q2, p, q0);
+		Transition q2q5 = new Transition(q2, p, q5);
+		Transition q2q6 = new Transition(q2, p, q6);
+		Transition q3q1 = new Transition(q3, p, q1);
+		Transition q3q4 = new Transition(q3, p, q4);
+		Transition q4q2 = new Transition(q4, p, q2);
+		Transition q4q3 = new Transition(q4, p, q3);
+		Transition q5q4 = new Transition(q5, p, q4);
+		Transition q5q6 = new Transition(q5, p, q6);
+		Transition q6q5 = new Transition(q6, p, q5);
+		ArrayList<Transition> transitionFunction = new ArrayList<Transition>();
+		transitionFunction.add(q0q1);
+		transitionFunction.add(q0q2);
+		transitionFunction.add(q1q3);
+		transitionFunction.add(q2q0);
+		transitionFunction.add(q2q5);
+		transitionFunction.add(q2q6);
+		transitionFunction.add(q3q1);
+		transitionFunction.add(q3q4);
+		transitionFunction.add(q4q2);
+		transitionFunction.add(q4q3);
+		transitionFunction.add(q5q4);
+		transitionFunction.add(q5q6);
+		transitionFunction.add(q6q5);
+		Automata automat = new Automata(q2, states, alphabet, acceptStates, transitionFunction);
+		automat.getPath();
+	}*/
+    
+    /**
+     * for test getComplementAutomata method
+     * @param args
+     */
+/*    public static void main(String[]args) 
+	{
+		State q0 = new State("q0"); 
+		State q1 = new State("q1"); 
+		State q2 = new State("q2"); 
+		State q3 = new State("q3"); 
+		State q4 = new State("q4"); 
+		State q5 = new State("q5"); 
+		State q6 = new State("q6"); 
+		q0.addNeighbour(q1);
+		q0.addNeighbour(q2);
+		q1.addNeighbour(q3);
+		q2.addNeighbour(q0);
+		q2.addNeighbour(q5);
+		q2.addNeighbour(q6);
+		q3.addNeighbour(q1);
+		q3.addNeighbour(q4);
+		q4.addNeighbour(q2);
+		q4.addNeighbour(q3);
+		q5.addNeighbour(q4);
+		q5.addNeighbour(q6);
+		q6.addNeighbour(q5);
+		ArrayList<State> states = new ArrayList<State>();
+		states.add(q0);
+		states.add(q1);
+		states.add(q2);
+		states.add(q3);
+		states.add(q4);
+		states.add(q5);
+		states.add(q6);
+		ArrayList<AtomicProp> alphabet = null;
+		ArrayList<State> acceptStates = new ArrayList<State>();
+		acceptStates.add(q0);		
+		AtomicProp p= new AtomicProp();
+		ArrayList<Transition> transitionFunction = new ArrayList<Transition>();
+		Automata automat = new Automata(q2, states, alphabet, acceptStates, transitionFunction);
+		automat.addTransitionRelation(q0, p, q1);
+		automat.addTransitionRelation(q0, p, q2);
+		automat.addTransitionRelation(q1, p, q3);
+		automat.addTransitionRelation(q2, p, q0);
+		automat.addTransitionRelation(q2, p, q5);
+		automat.addTransitionRelation(q2, p, q6);
+		automat.addTransitionRelation(q3, p, q1);
+		automat.addTransitionRelation(q3, p, q4);
+		automat.addTransitionRelation(q4, p, q2);
+		automat.addTransitionRelation(q4, p, q3);
+		automat.addTransitionRelation(q5, p, q4);
+		automat.addTransitionRelation(q5, p, q6);
+		automat.addTransitionRelation(q6, p, q5);
+		automat = automat.getComplementAutomata();
+		for(State q: automat.acceptStates)
+			System.out.println(q.getName());
+	}*/
 }
