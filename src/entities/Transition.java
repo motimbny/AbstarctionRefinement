@@ -1,12 +1,14 @@
 package entities;
 
+import java.util.ArrayList;
+
 public class Transition 
 {
 	private State currentState;
-	private AtomicProp input;
+	private ArrayList<AtomicProp> input;
 	private State destinationState;
 	
-	public Transition(State currentState, AtomicProp input, State destinationState)
+	public Transition(State currentState, ArrayList<AtomicProp> input, State destinationState)
 	{
 		this.currentState = currentState;
 		this.input = input;
@@ -22,7 +24,7 @@ public class Transition
 		return currentState;
 	}
 
-	public AtomicProp getInput() {
+	public ArrayList<AtomicProp> getInput() {
 		return input;
 	}
 }

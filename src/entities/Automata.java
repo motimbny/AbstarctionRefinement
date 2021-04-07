@@ -54,12 +54,12 @@ public class Automata
 		this.transitionFunction = transitionFunction;
 	}
 	
-	public void addTransitionRelation(State currentState, AtomicProp input, State destinationState)
+	public void addTransitionRelation(State currentState, ArrayList<AtomicProp> input, State destinationState)
 	{
 		Transition newTransition = new Transition(currentState, input, destinationState);
 		transitionFunction.add(newTransition);
 	}
-	
+
 	public Automata getComplementAutomata()
 	{
 		ArrayList<State> acceptStates_temp = new ArrayList<State>();
@@ -70,54 +70,6 @@ public class Automata
 		return complementAutomata;
 	}
 	
-	public KripkeSt convertToKripke()
-	{
-		ArrayList<ComplexState> kripkeStates = new ArrayList<ComplexState>();
-		ArrayList<ComplexState> initialStates = new ArrayList<ComplexState>();
-		HashMap<ComplexState,ArrayList<ComplexState>> transitionRelation = new HashMap<ComplexState,ArrayList<ComplexState>> (); 
-		HashMap<ComplexState, ArrayList<AtomicProp>> labelingFunction = new HashMap<ComplexState, ArrayList<AtomicProp>>(); 
-		for(State state: states)
-		{
-			ArrayList<State> containingStates = new ArrayList<State>();
-			containingStates.add(state);
-			ComplexState complexState = new ComplexState(state.getName(), containingStates, null);
-			kripkeStates.add(complexState);
-			if(state.equals(startState))  //???
-				initialStates.add(complexState);
-		}
-		for(Transition transition: transitionFunction)
-		{
-			ArrayList<State> containingStatesSrc = new ArrayList<State>();
-			containingStatesSrc.add(transition.getCurrentState());
-			ComplexState srcState = new ComplexState(transition.getCurrentState().getName(), containingStatesSrc, null);
-			ArrayList<State> containingStatesDest = new ArrayList<State>();
-			containingStatesDest.add(transition.getDestinationState());
-			ComplexState destState = new ComplexState(transition.getDestinationState().getName(), containingStatesDest, null);
-			if(transitionRelation.containsKey(srcState))
-			{
-				ArrayList<ComplexState> destStateList = transitionRelation.get(srcState);
-				if(!destStateList.contains(destState))
-					destStateList.add(destState);
-			}				
-			else
-			{
-				ArrayList<ComplexState> destStateList = new ArrayList<ComplexState>();
-				destStateList.add(destState);
-				transitionRelation.put(srcState, destStateList);
-			}
-			if(!labelingFunction.containsKey(srcState))
-			{
-				ArrayList<AtomicProp> atomicPropList = new ArrayList<AtomicProp>();
-				atomicPropList.add(transition.getInput());
-				labelingFunction.put(srcState, atomicPropList);
-			}
-			else
-				labelingFunction.get(srcState).add(transition.getInput());	
-		}
-		KripkeSt kripke = new KripkeSt(kripkeStates, initialStates, transitionRelation, labelingFunction);
-		return kripke;
-	}
-
 	/**
 	 * Finding path in automata using BFS algorithm
 	 * @return list of all the path in the automata
@@ -199,6 +151,7 @@ public class Automata
      */
     public String toString()
     {
+    	int tempIndex;
     	StringBuilder statesStr = new StringBuilder("States: { ");
     	for(State state: states)
     		statesStr.append(state.getName() + ", ");
@@ -213,11 +166,14 @@ public class Automata
     	StringBuilder acceptStatesStr = new StringBuilder("Accept states: { ");
     	for(State state: acceptStates)
     		acceptStatesStr.append(state.getName() + ", ");
-    	acceptStatesStr.deleteCharAt(acceptStatesStr.length()-2);
+		tempIndex = acceptStatesStr.lastIndexOf(",");
+    	if(tempIndex != -1)
+    		acceptStatesStr.deleteCharAt(acceptStatesStr.lastIndexOf(","));
     	acceptStatesStr.append("}\n");    	
     	StringBuilder transitionFuncStr = new StringBuilder("Transition function: { ");
     	for(Transition trans: transitionFunction)
-    		transitionFuncStr.append("( " + trans.getCurrentState().getName() + ", " + trans.getInput().getName() + " ) -> " + trans.getDestinationState().getName() + ",\n\t\t\t");
+    		for(AtomicProp input: trans.getInput())
+    			transitionFuncStr.append("( " + trans.getCurrentState().getName() + ", " + input.getName() + " ) -> " + trans.getDestinationState().getName() + ",\n\t\t\t");
     	transitionFuncStr.delete(transitionFuncStr.length()-5, transitionFuncStr.length()-1);
     	transitionFuncStr.append("}\n");   
     	String result = statesStr.toString() + alphabetStr.toString() + initStateStr + acceptStatesStr.toString() + transitionFuncStr.toString();
@@ -258,9 +214,11 @@ public class Automata
 		states.add(q4);
 		states.add(q5);
 		states.add(q6);
-		AtomicProp p= new AtomicProp("a");
+		AtomicProp ap = new AtomicProp("a");
+		ArrayList<AtomicProp> p= new ArrayList<AtomicProp>();
+		p.add(ap);
 		ArrayList<AtomicProp> alphabet = new ArrayList<AtomicProp>();
-		alphabet.add(p);
+		alphabet.add(ap);
 		ArrayList<State> acceptStates = new ArrayList<State>();
 		acceptStates.add(q6);		
 		ArrayList<Transition> transitionFunction = new ArrayList<Transition>();
