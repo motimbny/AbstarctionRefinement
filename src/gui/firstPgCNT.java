@@ -8,13 +8,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import entities.textFile;
 import enums.SCREENS;
 
 public class firstPgCNT {
@@ -35,10 +34,14 @@ public class firstPgCNT {
     private ImageView multiLTLClip;
 
     private Node thisNode;
+    public static textFile MMfile;
+    public static textFile MLfile;
 
     @FXML
     void continuePage(MouseEvent event) 
     {
+    	  MMfile=new textFile(multiModelInput.getText());
+    	  MLfile=new textFile(multiLTLInput.getText());
     	  thisNode = ((Node) event.getSource());
     	  GuiManager.SwitchScene(SCREENS.secondp,(Stage)thisNode.getScene().getWindow()); 
     }
@@ -81,6 +84,6 @@ public class firstPgCNT {
             fileName = chooser.getSelectedFile().getAbsolutePath();
         }
         multiLTLInput.setText(fileName);
-
     }
+    
 }
