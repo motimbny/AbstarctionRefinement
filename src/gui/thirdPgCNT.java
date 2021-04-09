@@ -1,6 +1,7 @@
 package gui;
 import enums.SCREENS;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,7 +10,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-public class thirdPgCNT {
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+
+import entities.algo;
+
+public class thirdPgCNT implements Initializable
+{
 
     @FXML
     private Button resBTN;
@@ -36,5 +44,12 @@ public class thirdPgCNT {
     	GuiManager.SwitchScene(SCREENS.fourthp,(Stage)thisNode.getScene().getWindow());  
 
     }
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources)
+	{
+		algo mainalg=new algo(null);
+		mainalg.runAbstraction();
+	}
 
 }

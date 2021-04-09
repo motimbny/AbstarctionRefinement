@@ -1,7 +1,9 @@
 package entities;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
@@ -19,17 +21,37 @@ public class pdfMaker
 	    try 
 	    {
 		    Document document = new Document();
-			OutputStream outputStream = new FileOutputStream(new File(path));
+		    File f=new File(path);
+			OutputStream outputStream = new FileOutputStream(f);
 	 	    PdfWriter.getInstance(document, outputStream);
 	 	    document.open();
 	 	    for(String con: content)
 	 	       document.add(new Paragraph(con));
 	 	    document.close();
 	        outputStream.close();
+		    openPDF(f);
 	    } 
 	    catch (Exception e) 
 	    {
 		e.printStackTrace();
 	    }
 	  }
+	public void openPDF(File file)
+	{
+		if(!Desktop.isDesktopSupported())
+		{
+            System.out.println("Desktop is not supported");
+            return;
+        } 
+        Desktop desktop = Desktop.getDesktop();
+        if(file.exists())
+			try 
+            {
+				desktop.open(file);
+			} catch (IOException e) 
+            {
+				e.printStackTrace();
+			}
+
+    }
 }

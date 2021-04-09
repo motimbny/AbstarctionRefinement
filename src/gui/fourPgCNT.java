@@ -1,5 +1,9 @@
 package gui;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import entities.pdfMaker;
 import enums.SCREENS;
 import javafx.fxml.FXML;
@@ -28,7 +32,12 @@ public class fourPgCNT {
     @FXML
     void ExportToPDF(MouseEvent event)
     {
-    	pdmkr=new pdfMaker("Abstarction_results.pdf");
+		String dateName;
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Date date = new Date();
+		dateName=dateFormat.format(date).toString();
+		dateName+="_Abstarction_results.pdf";
+    	pdmkr=new pdfMaker(dateName);
     	String[] content=new String[] {""};
     	content[0]="moti";
     	pdmkr.makePdf(content);

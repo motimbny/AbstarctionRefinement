@@ -12,6 +12,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import java.util.concurrent.TimeUnit;
 
 public class secondPgCNT implements Initializable
 {
@@ -29,6 +30,7 @@ public class secondPgCNT implements Initializable
     @FXML
     private ImageView backToFirstPageBTN;
     private Node thisNode;
+    public static long startTime;
 
     @FXML
     void backToFirstPage(MouseEvent event) {
@@ -38,6 +40,7 @@ public class secondPgCNT implements Initializable
 
     @FXML
     void runTheAlgo(MouseEvent event) {
+        startTime = System.nanoTime();
     	thisNode = ((Node) event.getSource());
     	GuiManager.SwitchScene(SCREENS.thirdp,(Stage)thisNode.getScene().getWindow()); 
     }
