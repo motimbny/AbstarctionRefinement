@@ -1,5 +1,6 @@
 package gui;
 
+import entities.pdfMaker;
 import enums.SCREENS;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -23,9 +24,14 @@ public class fourPgCNT {
     @FXML
     private Label timeTEXT;
     private Node thisNode;
+    private pdfMaker pdmkr;
     @FXML
-    void ExportToPDF(MouseEvent event) {
-    	
+    void ExportToPDF(MouseEvent event)
+    {
+    	pdmkr=new pdfMaker("Abstarction_results.pdf");
+    	String[] content=new String[] {""};
+    	content[0]="moti";
+    	pdmkr.makePdf(content);
     }
 
     @FXML
