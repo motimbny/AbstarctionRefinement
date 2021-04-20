@@ -12,7 +12,6 @@ public class KripkeSt
 	private ArrayList<ComplexState> states;
 	private ArrayList<ComplexState> initialStates;
 	private HashMap<ComplexState,ArrayList<ComplexState>> transitionRelation; 
-//	private HashMap<ComplexState, ArrayList<AtomicProp>> labelingFunction; 
     private kripkeType type;
     private int counter;
     
@@ -53,12 +52,7 @@ public class KripkeSt
 	public void setRk(HashMap<ComplexState, ArrayList<ComplexState>> rk) {
 		transitionRelation = rk;
 	}
-/*	public HashMap<ComplexState, ArrayList<AtomicProp>> getLk() {
-		return labelingFunction;
-	}
-	public void setLk(HashMap<ComplexState, ArrayList<AtomicProp>> lk) {
-		labelingFunction = lk;
-	}*/
+
 	public kripkeType getType() {
 		return type;
 	}
@@ -167,6 +161,7 @@ public class KripkeSt
             	if(!alphabet.contains(lbl))  //maybe we will need to change hashcode of AP
             		alphabet.add(lbl);
 		}
+		ArrayList<State> destStates = new ArrayList<State>();
 		ComplexState src = null, dest;
 		ArrayList<AtomicProp> inputs = null;
 		Iterator<Map.Entry<ComplexState,ArrayList<ComplexState>>> transitionIterator = transitionRelation.entrySet().iterator();
@@ -176,17 +171,21 @@ public class KripkeSt
             if(transition.getKey() instanceof ComplexState)
             {
             	src = (ComplexState)transition.getKey();
-            	inputs = src.getLabels();          
-	            ArrayList<ComplexState> destinationStates = null;
+            	inputs = src.getLabels(); 
+            	ArrayList<ComplexState> destinationStates = null;
 	            if(transition.getValue() instanceof ArrayList)
 	            {
 	            	destinationStates = (ArrayList<ComplexState>)transition.getValue();
 		            for(ComplexState state: destinationStates)
 		            {
 		            	dest = state;
-		            	Transition trans = new Transition(src.convertToState(), inputs, dest.convertToState());
+		            	destStates.add(dest.convertToState());
+		            }
+		            for(AtomicProp input: inputs)
+		            {
+		            	Transition trans = new Transition(src.convertToState(), input, destStates);
 			            automataTransitionFunction.add(trans);
-		            }   
+		            }
 	            }
 	        }
         }

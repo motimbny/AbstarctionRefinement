@@ -7,6 +7,7 @@ public class State
 	 private String name;
 	 private ArrayList<State> neighbors;
 	 private boolean accept = false;
+	 private ArrayList<State> containedStates = new ArrayList<State>();
 	 public State(String name)
 	 {
 		 this.name=name;
@@ -17,11 +18,24 @@ public class State
     	 this.name=name;
     	 this.neighbors=neighbours;    	 
      }
+     public State(String name, boolean accept)
+	 {
+		 this.name=name;
+    	 this.neighbors=new ArrayList<State>();
+    	 this.accept = accept;
+	 }
      public State(String name, ArrayList<State> neighbors, boolean accept) 
      {
 		this.name = name;
 		this.neighbors = neighbors;
 		this.accept = accept;
+	}
+     public State(ArrayList<State> containedStates) 
+     {
+    	 name = "";
+    	 for(State s: containedStates)
+    		 name += s.getName();
+ 		setContainedStates(containedStates);
 	}
 	public String getName() {
  		return name;
@@ -32,7 +46,13 @@ public class State
  	public void setNeighbours(ArrayList<State> neighbours) {
  		this.neighbors = neighbours;
  	}
-     public boolean isAccept() {
+     public ArrayList<State> getContainedStates() {
+		return containedStates;
+	}
+	public void setContainedStates(ArrayList<State> containedStates) {
+		this.containedStates = containedStates;
+	}
+	public boolean isAccept() {
 		return accept;
 	}
 	public void setAccept(boolean accept) {
