@@ -1,5 +1,10 @@
 package gui;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import entities.pdfMaker;
 import enums.SCREENS;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -23,9 +28,19 @@ public class fourPgCNT {
     @FXML
     private Label timeTEXT;
     private Node thisNode;
+    private pdfMaker pdmkr;
     @FXML
-    void ExportToPDF(MouseEvent event) {
-    	
+    void ExportToPDF(MouseEvent event)
+    {
+		String dateName;
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Date date = new Date();
+		dateName=dateFormat.format(date).toString();
+		dateName+="_Abstarction_results.pdf";
+    	pdmkr=new pdfMaker(dateName);
+    	String[] content=new String[] {""};
+    	content[0]="moti";
+    	pdmkr.makePdf(content);
     }
 
     @FXML
