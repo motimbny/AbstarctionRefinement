@@ -48,8 +48,9 @@ public class thirdPgCNT implements Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		algo mainalg=new algo(null);
-		mainalg.runAbstraction();
+		//algo mainalg=new algo(null);
+		//mainalg.runAbstraction();
+		System.out.println("hello");
 	}
 
 }

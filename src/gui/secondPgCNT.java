@@ -40,7 +40,7 @@ public class secondPgCNT implements Initializable
 
     @FXML
     void runTheAlgo(MouseEvent event) {
-        startTime = System.nanoTime();
+        //startTime = System.nanoTime();
     	thisNode = ((Node) event.getSource());
     	GuiManager.SwitchScene(SCREENS.thirdp,(Stage)thisNode.getScene().getWindow()); 
     }

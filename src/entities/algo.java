@@ -14,9 +14,8 @@ public class algo
   static long totalTime;
   public algo(KripkeSt[] M)
   {
+	  boolean res;
 	  this.M=M;
-	  this.A=createAbstraction(M);
-	  this.B=createAbstraction(M);
   }
   private KripkeSt[] createAbstraction(KripkeSt[] m) 
   {
@@ -41,10 +40,43 @@ public class algo
 	}
 	return answer;
   }
-  public void runAbstraction()
+  public wordRun getCEX(KripkeSt[] a, KripkeSt[] b)
   {
-	  long endTime = System.nanoTime(); 
-	  totalTime=endTime-secondPgCNT.startTime;
-	  System.out.println("total time is : "+totalTime); 
+	return null;
+  }
+  private KripkeSt[] refine(wordRun counterExampleA, KripkeSt[] a2)
+  {
+	return null;
+  }
+  public boolean runAbstraction()
+  {
+	  //long endTime = System .nanoTime(); 
+	  //totalTime=endTime-secondPgCNT.startTime;
+	  //System.out.println("total time is : "+totalTime); 
+	  boolean resa,resb;
+	  wordRun counterExampleA;
+	  wordRun counterExampleB;
+	  MMC mmc=new MMC();
+	  this.A=createAbstraction(M);
+	  this.B=createAbstraction(M);
+	  while(true)
+	  {
+		  resa=mmc.runMMCF(A);
+		  if(resa)
+			  return true;
+		  else
+		  {
+			  counterExampleA=getCEX(A,M);
+			  A=refine(counterExampleA,A);
+		  }
+		  resb=mmc.runMMCF(B);
+		  if(resb)
+			  return true;
+		  else
+		  {
+			  counterExampleB=getCEX(B,M);
+			  B=refine(counterExampleB,B);
+		  }
+	  }
   }
 }
