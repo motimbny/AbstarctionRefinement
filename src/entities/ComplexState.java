@@ -2,7 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 
-public class ComplexState 
+public class ComplexState implements Cloneable
 {
 	private String name;
 	private ArrayList<State> containingStates; 
@@ -24,6 +24,9 @@ public class ComplexState
 	}
 	public String getName() {
 		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public ArrayList<State> getContainingStates() {
 		return containingStates;
@@ -50,6 +53,10 @@ public class ComplexState
      {
     	 containingStates.add(state);
      }
+     public void addContainingStates(ArrayList<State> states)
+     {
+    	 containingStates.addAll(states);
+     }     
      
      public ArrayList<AtomicProp> getLabels() {
 		return labels;
@@ -60,6 +67,18 @@ public class ComplexState
 	public void addLabel(AtomicProp label)
 	{
 		labels.add(label);
+	}
+	public boolean compareLabels(ArrayList<AtomicProp> other)
+	{
+	    if(other.size()!=this.labels.size())
+	    	return false;
+	    else
+	    {
+	    	for(int i=0;i<this.labels.size();i++)
+	    		if(!other.contains(this.labels.get(i)))
+	    			return false;
+	    }
+	    return true;
 	}
 	public boolean isAccept()
      {
@@ -106,6 +125,11 @@ public class ComplexState
          ComplexState cs = (ComplexState) o;
          // Compare the name of the states and return accordingly 
          return name.equals(cs.getName());
+     }
+     
+     public Object clone() throws CloneNotSupportedException
+     {
+		return super.clone(); 
      }
 
 }

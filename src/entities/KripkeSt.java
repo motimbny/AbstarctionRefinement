@@ -34,7 +34,7 @@ public class KripkeSt
 		this.counter = states.size();
 	}
 
-	public ArrayList<ComplexState> getSk() {
+	public ArrayList<ComplexState> getStates() {
 		return states;
 	}
 	public void setStates(ArrayList<ComplexState> sk) {
