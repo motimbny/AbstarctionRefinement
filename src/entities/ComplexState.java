@@ -127,9 +127,20 @@ public class ComplexState implements Cloneable
          return name.equals(cs.getName());
      }
      
-     public Object clone() throws CloneNotSupportedException
+     @SuppressWarnings("unchecked")
+	public ComplexState clone() throws CloneNotSupportedException
      {
-		return super.clone(); 
+    	 ComplexState clone = null;
+    	 try {
+    		 clone = (ComplexState)super.clone();
+    		 clone.setNeighbours((ArrayList<ComplexState>)this.getNeighbours().clone());
+    		 clone.setContainingStates((ArrayList<State>)this.getContainingStates().clone());
+    		 clone.setLabels((ArrayList<AtomicProp>)this.getLabels().clone());
+    	 }
+    	 catch(CloneNotSupportedException e) {
+    		 throw new RuntimeException(e);
+    	 }
+    	 return clone;
      }
 
 }

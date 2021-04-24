@@ -1,6 +1,7 @@
 package entities;
 
-public class AtomicProp
+
+public class AtomicProp implements Cloneable
 {
 	private String name;
 
@@ -12,4 +13,9 @@ public class AtomicProp
 	public String getName() {
 		return name;
 	}
+
+	public AtomicProp clone() throws CloneNotSupportedException
+     {
+    	 return (AtomicProp)super.clone();
+     }
 }

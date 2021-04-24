@@ -2,7 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 
-public class State
+public class State implements Cloneable
 {
 	 private String name;
 	 private ArrayList<State> neighbors;
@@ -96,5 +96,20 @@ public class State
          State s = (State) o;
          // Compare the name of the states and return accordingly 
          return name.equals(s.getName());
+     }
+     
+	@SuppressWarnings("unchecked")
+	public State clone()
+     {
+    	 State clone = null;
+    	 try {
+    		 clone = (State)super.clone();
+    		 clone.setNeighbours((ArrayList<State>)this.getNeighbours().clone());
+    		 clone.setContainedStates((ArrayList<State>)this.getContainedStates().clone());
+    	 }
+    	 catch(CloneNotSupportedException e) {
+    		 throw new RuntimeException(e);
+    	 }
+    	 return clone;
      }
 }

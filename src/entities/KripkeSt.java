@@ -192,6 +192,19 @@ public class KripkeSt
 		Automata automata = new Automata(automataStartState, automataStates, alphabet, automataAcceptStates, automataTransitionFunction);
 		return automata;
 	}
+	
+	public KripkeSt getClone() throws CloneNotSupportedException
+	{
+		ArrayList<ComplexState> states=new ArrayList<ComplexState>();
+		ArrayList<ComplexState> initialStates = new ArrayList<ComplexState>();
+		HashMap<ComplexState,ArrayList<ComplexState>> transitionRelation; 
+		for (ComplexState initState : this.initialStates)
+			initialStates.add(initState.clone());
+		for (ComplexState state : this.states)
+			states.add(state.clone());
+		
+		return new KripkeSt(states, initialStates, (HashMap<ComplexState,ArrayList<ComplexState>>)this.transitionRelation.clone(), this.type);
+	}
 
 	public static void main(String[]args)
 	{
