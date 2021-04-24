@@ -1,27 +1,26 @@
 package entities;
-import entities.KripkeSt;
 import enums.Quantifier;
 import enums.kripkeType;
-import gui.secondPgCNT;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 public class algo 
 {
-  private ArrayList<KripkeSt> M;
-  private KripkeSt[] A;
-  private KripkeSt[] B;
+  private ArrayList<KripkeSt> m;
+  private ArrayList<KripkeSt> a;
+  private ArrayList<KripkeSt> b;
+  private ArrayList<Quantifier> p;
   static long totalTime;
-  public algo(KripkeSt[] M)
+  
+  public algo(ArrayList<KripkeSt> m, ArrayList<Quantifier> p)
   {
-	  boolean res;
-	  this.M=M;
+	  this.m=m;
+	  this.p = p;
   }
-  private KripkeSt[] createAbstraction(KripkeSt[] m) 
+  private ArrayList<KripkeSt> createAbstraction(ArrayList<KripkeSt> m) 
   {
 	return null;
   }
@@ -44,11 +43,39 @@ public class algo
 	}
 	return answer;
   }
-  public wordRun getCEX(KripkeSt[] a, KripkeSt[] b)
+  
+  public static ArrayList<WordRun> getCEX(ArrayList<KripkeSt> a, ArrayList<KripkeSt> m)
   {
-	return null;
+	  ArrayList<LinkedList<State>> bFSpath;
+	  WordRun wi = null;
+	  Automata intersrctionAutomata;
+	  ArrayList<WordRun> counterExamples = new ArrayList<WordRun>();
+	  for(int i=0; i<m.size(); i++)
+	  {
+		  Automata ai = a.get(i).convertToAutomata(a.get(i).getInitialStates().get(0));
+		  Automata mi = m.get(i).convertToAutomata(m.get(i).getInitialStates().get(0));
+		  if(a.get(i).getType() == kripkeType.Over)
+		  {
+			  ai = ai.getComplementAutomata();
+			  intersrctionAutomata = ai.getIntersection(mi);
+			  bFSpath = intersrctionAutomata.getPath();
+			  if(!bFSpath.isEmpty())
+				  wi = new WordRun(bFSpath.get(0));
+		  }
+		  else
+		  {
+			  mi = mi.getComplementAutomata();
+			  intersrctionAutomata = mi.getIntersection(ai);
+			  bFSpath = intersrctionAutomata.getPath();
+			  if(!bFSpath.isEmpty())
+				  wi = new WordRun(bFSpath.get(0));			  
+		  }
+		  counterExamples.add(wi);
+		  wi = null;
+	  }
+	return counterExamples;
   }
-  private KripkeSt[] refine(wordRun counterExampleA, KripkeSt[] a2)
+  private ArrayList<KripkeSt> refine(WordRun counterExampleA, ArrayList<KripkeSt> a2)
   {
 	return null;
   }
@@ -58,28 +85,27 @@ public class algo
 	  //totalTime=endTime-secondPgCNT.startTime;
 	  //System.out.println("total time is : "+totalTime); 
 	  boolean resa,resb;
-	  wordRun counterExampleA;
-	  wordRun counterExampleB;
+	  ArrayList<WordRun> counterExampleA;
+	  ArrayList<WordRun> counterExampleB;
 	  MMC mmc=new MMC();
-	  this.A=createAbstraction(M);
-	  this.B=createAbstraction(M);
+	  initialize();
 	  while(true)
 	  {
-		  resa=mmc.runMMCF(A);
+		  resa=mmc.runMMCF(a, p);
 		  if(resa)
 			  return true;
 		  else
 		  {
-			  counterExampleA=getCEX(A,M);
-			  A=refine(counterExampleA,A);
+			  counterExampleA=getCEX(a,m);
+			  a=refine(counterExampleA,a);
 		  }
-		  resb=mmc.runMMCF(B);
+		  resb=mmc.runMMCF(b, p);
 		  if(resb)
-			  return true;
+			  return false;
 		  else
 		  {
-			  counterExampleB=getCEX(B,M);
-			  B=refine(counterExampleB,B);
+			  counterExampleB=getCEX(b,m);
+			  b=refine(counterExampleB,b);
 		  }
 	  }
   }
@@ -94,7 +120,7 @@ public class algo
 	  boolean isConnect = false;
 	  try {
 		  combinedStates = combineStates(copyOfkripke.getStates());
-		  for(ComplexState initialState: copyOfkripke.getIk())
+		  for(ComplexState initialState: copyOfkripke.getInitialStates())
 			  for(ComplexState complexState: combinedStates)
 				  if(complexState.getContainingStates().contains(initialState.convertToState()))
 					  initialStates.add(complexState);
@@ -157,7 +183,7 @@ public class algo
 	  boolean isConnect = false;
 	  try {
 		  combinedStates = combineStates(copyOfkripke.getStates());
-		  for(ComplexState initialState: copyOfkripke.getIk())
+		  for(ComplexState initialState: copyOfkripke.getInitialStates())
 			  for(ComplexState complexState: combinedStates)
 				  if(complexState.getContainingStates().contains(initialState.convertToState()))
 					  initialStates.add(complexState);
@@ -231,11 +257,10 @@ public class algo
 	  return resultStates;
   }
   
-  public ArrayList<ArrayList<KripkeSt>> initialize(ArrayList<KripkeSt> m, ArrayList<Quantifier> p)
+  public void initialize()
   {
-	  ArrayList<ArrayList<KripkeSt>> output = new ArrayList<ArrayList<KripkeSt>>();
-	  ArrayList<KripkeSt> a = new ArrayList<KripkeSt>();
-	  ArrayList<KripkeSt> b = new ArrayList<KripkeSt>();
+	  a = new ArrayList<KripkeSt>();
+	  b = new ArrayList<KripkeSt>();
 	  for(int i=0; i<m.size(); i++)
 	  {
 		  if(p.get(i) == Quantifier.exist)
@@ -257,9 +282,6 @@ public class algo
 			}
 		  }
 	  }
-	  output.add(a);
-	  output.add(b);
-	  return output;
   }
   
   public static void main(String[]args) throws CloneNotSupportedException 
@@ -301,7 +323,9 @@ public class algo
 		State q3s = new State("q3"); 
 		State q4s = new State("q4");
 		State q5s = new State("q5"); 
-		State q6s = new State("q6"); 		
+		State q6s = new State("q6"); 
+		State q7s = new State("q7"); 
+		State q8s = new State("q8"); 
 		q3s.setAccept(true);
 		ComplexState q0 = new ComplexState("q0");
 		ComplexState q1 = new ComplexState("q1");
@@ -310,6 +334,8 @@ public class algo
 		ComplexState q4 = new ComplexState("q4");
 		ComplexState q5 = new ComplexState("q5");
 		ComplexState q6 = new ComplexState("q6");
+		ComplexState q7 = new ComplexState("q7");
+		ComplexState q8 = new ComplexState("q8");
 		q0.addContainingStates(q0s);
 		q1.addContainingStates(q1s);
 		q2.addContainingStates(q2s);
@@ -317,6 +343,8 @@ public class algo
 		q4.addContainingStates(q4s);	
 		q5.addContainingStates(q5s);
 		q6.addContainingStates(q6s);
+		q7.addContainingStates(q7s);
+		q8.addContainingStates(q8s);
 		ArrayList<ComplexState> states = new ArrayList<ComplexState> ();
 		states.add(q0);
 		states.add(q1);
@@ -325,12 +353,15 @@ public class algo
 		states.add(q4);
 		states.add(q5);
 		states.add(q6);
+		states.add(q7);
+		states.add(q8);
 		ArrayList<ComplexState> initialStates = new ArrayList<ComplexState>();
 		initialStates.add(q0);
 		HashMap<ComplexState, ArrayList<ComplexState>> transitionRelation = new HashMap<ComplexState, ArrayList<ComplexState>>();
 		AtomicProp a = new AtomicProp("a");
 		AtomicProp b = new AtomicProp("b");
 		AtomicProp c = new AtomicProp("c");
+		AtomicProp d = new AtomicProp("d");
 		q0.addLabel(a);
 		q1.addLabel(a);
 		q2.addLabel(b);
@@ -338,12 +369,22 @@ public class algo
 		q4.addLabel(b);
 		q5.addLabel(c);
 		q6.addLabel(c);
+		q7.addLabel(d);
+		q8.addLabel(d);		
 		KripkeSt kripke = new KripkeSt(states, initialStates, transitionRelation, kripkeType.Regular);
 		kripke.addTransitionRelation(q0, q3);
 		kripke.addTransitionRelation(q1, q4);
-		kripke.addTransitionRelation(q2, q6);
+		kripke.addTransitionRelation(q2, q5);
+		kripke.addTransitionRelation(q3, q5);
+		kripke.addTransitionRelation(q4, q6);
+		kripke.addTransitionRelation(q5, q8);		
 		System.out.println(kripke.toString());
-		KripkeSt under = overApproximation(kripke);
-		System.out.println(under.toString());
+		
+		KripkeSt under = underApproximation(kripke);
+		ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
+		mList.add(kripke);		
+		ArrayList<KripkeSt> aList = new ArrayList<KripkeSt>();
+		aList.add(under);
+		ArrayList<WordRun> ce = getCEX( aList, mList);
   }
 }

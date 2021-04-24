@@ -405,6 +405,7 @@ public class Automata
 	        }
 			return pStates;
 	}
+
 	
     /**
      * for test getPath method

@@ -112,4 +112,11 @@ public class State implements Cloneable
     	 }
     	 return clone;
      }
+	
+	
+	public ComplexState convertToComplexState()
+	{
+		ComplexState complesState = new ComplexState(this.getName());
+		return complesState;
+	}
 }

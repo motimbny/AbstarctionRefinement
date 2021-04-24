@@ -40,7 +40,7 @@ public class KripkeSt
 	public void setStates(ArrayList<ComplexState> sk) {
 		states = sk;
 	}
-	public ArrayList<ComplexState> getIk() {
+	public ArrayList<ComplexState> getInitialStates() {
 		return initialStates;
 	}
 	public void setInitialStates(ArrayList<ComplexState> ik) {
