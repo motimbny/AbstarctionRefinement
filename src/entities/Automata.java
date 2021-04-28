@@ -87,7 +87,10 @@ public class Automata
 		ArrayList<State> acceptStates_temp = new ArrayList<State>();
 		for(State state: states)
 			if(!acceptStates.contains(state))
+			{
 				acceptStates_temp.add(state);
+				state.setAccept(true);
+			}
 		Automata complementAutomata = new Automata(startState, states, alphabet, acceptStates_temp, transitionFunction);
 		return complementAutomata;
 	}
@@ -224,12 +227,12 @@ public class Automata
     	ArrayList<AtomicProp> alphabet;
     	ArrayList<State> acceptStates = new ArrayList<State>();
     	ArrayList<Transition> transitionFunction = new ArrayList<Transition>(); 
-    	ArrayList<State> containedStates = new ArrayList<State>();
     	for(State stateA: this.states)
     		for(State stateB: b.getStates())
     		{
     			if(stateA.isAccept() && stateB.isAccept())
     				isAccept = true;
+    	    	ArrayList<State> containedStates = new ArrayList<State>();
     			containedStates.add(stateA);
     			containedStates.add(stateB);
     			intersectState = new State(containedStates);
@@ -237,8 +240,9 @@ public class Automata
     			if(isAccept)
     				acceptStates.add(intersectState);
     			states.add(intersectState);
-    			containedStates.clear();
+    			isAccept = false;
     		}
+    	ArrayList<State> containedStates = new ArrayList<State>();
     	containedStates.add(this.startState);
     	containedStates.add(b.getStartState());
     	startState = new State(containedStates);

@@ -161,7 +161,6 @@ public class KripkeSt
             	if(!alphabet.contains(lbl))  //maybe we will need to change hashcode of AP
             		alphabet.add(lbl);
 		}
-		ArrayList<State> destStates = new ArrayList<State>();
 		ComplexState src = null, dest;
 		ArrayList<AtomicProp> inputs = null;
 		Iterator<Map.Entry<ComplexState,ArrayList<ComplexState>>> transitionIterator = transitionRelation.entrySet().iterator();
@@ -176,7 +175,8 @@ public class KripkeSt
 	            if(transition.getValue() instanceof ArrayList)
 	            {
 	            	destinationStates = (ArrayList<ComplexState>)transition.getValue();
-		            for(ComplexState state: destinationStates)
+	        		ArrayList<State> destStates = new ArrayList<State>();
+	            	for(ComplexState state: destinationStates)
 		            {
 		            	dest = state;
 		            	destStates.add(dest.convertToState());

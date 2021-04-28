@@ -53,7 +53,9 @@ public class algo
 	  for(int i=0; i<m.size(); i++)
 	  {
 		  Automata ai = a.get(i).convertToAutomata(a.get(i).getInitialStates().get(0));
+		  System.out.println("\nai:\n"+ai.toString());
 		  Automata mi = m.get(i).convertToAutomata(m.get(i).getInitialStates().get(0));
+		  System.out.println("\nmi:\n"+mi.toString());
 		  if(a.get(i).getType() == kripkeType.Over)
 		  {
 			  ai = ai.getComplementAutomata();
@@ -65,7 +67,9 @@ public class algo
 		  else
 		  {
 			  mi = mi.getComplementAutomata();
+			  System.out.println("\nmi:\n"+mi.toString());
 			  intersrctionAutomata = mi.getIntersection(ai);
+			  System.out.println("\nhituh::\n"+intersrctionAutomata.toString());
 			  bFSpath = intersrctionAutomata.getPath();
 			  if(!bFSpath.isEmpty())
 				  wi = new WordRun(bFSpath.get(0));			  
@@ -381,6 +385,7 @@ public class algo
 		System.out.println(kripke.toString());
 		
 		KripkeSt under = underApproximation(kripke);
+		System.out.println("Under:\n"+under.toString());
 		ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
 		mList.add(kripke);		
 		ArrayList<KripkeSt> aList = new ArrayList<KripkeSt>();
