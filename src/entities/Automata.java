@@ -106,19 +106,21 @@ public class Automata
 		State que[] = new State[states.size()];
 		Arrays.fill(que, null);
 		HashMap<State, Boolean> visited = new HashMap<State, Boolean>();
-		ArrayList<State> tmp = new ArrayList<State>();
+		ArrayList<State> tmp;
 		for(State state: states)
 		{
+			tmp = new ArrayList<State>();
 			for(Transition trans: transitionFunction)
 				if(trans.getCurrentState().equals(state))
-					trans.getDestinationStates().forEach(dest ->{
-						if(!tmp.contains(dest))
-							tmp.add(dest);
-						});
+				{
+					ArrayList<State> destinationSrates = trans.getDestinationStates();
+					for(int i=0; i<destinationSrates.size(); i++)
+						if(!tmp.contains(destinationSrates.get(i)))
+							tmp.add(destinationSrates.get(i));		
+				}
 			adjList.put(state, tmp);
 			parent.put(state, null);
 			visited.put(state, false);
-			tmp.clear();
 		}
 		int front = -1, rear = -1;
         visited.put(startState, true);
@@ -148,7 +150,8 @@ public class Automata
         for(State state: states)
         {
         	LinkedList<State> path = new LinkedList<>(insertPathToList(parent, startState, state));
-        	allPath.add(path);
+        	if(path.size() != 1 || path.get(0).equals(startState))
+        		allPath.add(path);
         }
 		return allPath;
 	}
@@ -159,12 +162,14 @@ public class Automata
     	LinkedList<State> path = new LinkedList<>();
         // The while loop will stop only when the
         // destination and the source node become equal
-        while (!source.equals(detenation)) 
+        while (!source.equals(detenation) ) 
         {
             // add the destination to the list and store the parent
             // of the node in the destination since parent
             // stores the node through which
             // the current node has been reached
+        	if(parent.get(detenation) == null)
+        		break;
             path.addFirst(detenation);
             System.out.print(detenation.getName() + " <- "); //for testing
             detenation = parent.get(detenation);
