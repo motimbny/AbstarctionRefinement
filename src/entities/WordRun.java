@@ -1,35 +1,59 @@
 package entities;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
+
+import enums.kripkeType;
 
 public class WordRun 
 {
-	private ArrayList<ComplexState> run;
+	private LinkedList<String> run;
 	public WordRun()
 	{
-		 run=new ArrayList<ComplexState>();
+		 run=new LinkedList<String>();
 	}
-    public WordRun(ArrayList<ComplexState> run)
+    public WordRun(LinkedList<String> run)
     {
     	this.run=run;
     }
     
-    public WordRun(LinkedList<State> run)
+    public WordRun(LinkedList<State> run, kripkeType runType)
     {
-    	this.run=new ArrayList<ComplexState>();
+    	this.run = new LinkedList<String>();
     	for(State state: run)
-    	{
-    		state.convertToComplexState();
-    		run.add(state);
-    	}
+    		this.run.add(getLabelName(state.getName(),runType));
     }
     
-    public ArrayList<ComplexState> getRun()
+    private String getLabelName(String str,kripkeType runType)
+    {
+    	StringBuilder temp = new StringBuilder();
+    	int i;
+    	if(runType== kripkeType.Over)
+    	{
+    		i=str.length()-1;
+    		while(!Character.isLetter(str.charAt(i)))
+    		{
+    			temp=temp.insert(0, str.charAt(i));
+    			i--;
+    		}
+    		temp.insert(0, str.charAt(i));
+    	}
+    	else
+    	{
+    		temp.append(str.charAt(0));
+    		i=1;
+    		while(Character.isDigit(str.charAt(i)))
+    		{
+    			temp=temp.append(str.charAt(i));
+    			i++;
+    		}
+    	}
+    	return temp.toString();
+    }
+    public LinkedList<String> getRun()
     {
     	return run;
     }
-    public void updateRun(ArrayList<ComplexState> run)
+    public void updateRun(LinkedList<String> run)
     {
     	this.run=run;
     }

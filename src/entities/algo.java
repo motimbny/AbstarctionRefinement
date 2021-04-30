@@ -53,20 +53,20 @@ public class algo
 	  for(int i=0; i<m.size(); i++)
 	  {
 		  Automata ai = a.get(i).convertToAutomata(a.get(i).getInitialStates().get(0));
-		  System.out.println("\nai:\n"+ai.toString());		  
+		  System.out.println("\nai:\n"+ai.toString());		   
+		  Automata mi = m.get(i).convertToAutomata(m.get(i).getInitialStates().get(0));
+		  System.out.println("\nmi:\n"+mi.toString()); 
 		  ai = ai.convertToDeterministic();
 		  System.out.println("\ndeterministi ai:\n"+ai.toString());
-		  Automata mi = m.get(i).convertToAutomata(m.get(i).getInitialStates().get(0));
-		  System.out.println("\ndeterministi mi:\n"+mi.toString());
 		  mi = mi.convertToDeterministic();
-		  System.out.println("\nmi:\n"+mi.toString());
+		  System.out.println("\ndeterministi mi:\n"+mi.toString());
 		  if(a.get(i).getType() == kripkeType.Over)
 		  {
 			  ai = ai.getComplementAutomata();
 			  intersrctionAutomata = ai.getIntersection(mi);
 			  bFSpath = intersrctionAutomata.getPath();
 			  if(!bFSpath.isEmpty())
-				  wi = new WordRun(bFSpath.get(0));
+				  wi = new WordRun(findMaxList(bFSpath), kripkeType.Over);
 		  }
 		  else
 		  {
@@ -76,13 +76,25 @@ public class algo
 			  System.out.println("\nhituh::\n"+intersrctionAutomata.toString());
 			  bFSpath = intersrctionAutomata.getPath();
 			  if(!bFSpath.isEmpty())
-				  wi = new WordRun(bFSpath.get(0));			  
+				  wi = new WordRun(findMaxList(bFSpath), kripkeType.Under);	  
 		  }
 		  counterExamples.add(wi);
 		  wi = null;
 	  }
 	return counterExamples;
   }
+  
+  private static LinkedList<State> findMaxList(ArrayList<LinkedList<State>> lists)
+  {
+	  LinkedList<State> max = null;
+	  for(LinkedList<State> list: lists)
+	  {
+		  if( max == null || list.size()>max.size())
+			  max = list;
+	  }
+	return max;
+  }
+  
   private ArrayList<KripkeSt> refine(WordRun counterExampleA, ArrayList<KripkeSt> a2)
   {
 	return null;
@@ -233,7 +245,7 @@ public class algo
 				  }
 			  }
 		  }
-			return new KripkeSt(combinedStates, initialStates, transitionRelation, kripkeType.Under);
+			return new KripkeSt(combinedStates, initialStates, transitionRelation, kripkeType.Over);
 
 	} catch (CloneNotSupportedException e) 
 	  {
@@ -396,12 +408,13 @@ public class algo
 		kripke.addTransitionRelation(q5, q8);		
 		System.out.println("\nregular kripke\n" + kripke.toString());
 		
-		KripkeSt under = underApproximation(kripke);
-		System.out.println("\nUnder kripke:\n"+under.toString());
+		KripkeSt over = overApproximation(kripke);
+		System.out.println("\nover kripke:\n"+over.toString());
 		ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
 		mList.add(kripke);		
 		ArrayList<KripkeSt> aList = new ArrayList<KripkeSt>();
-		aList.add(under);
+		aList.add(over);
 		ArrayList<WordRun> ce = getCEX( aList, mList);
+		System.out.println(ce.get(0).getRun().toString());
   }
 }

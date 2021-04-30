@@ -86,11 +86,15 @@ public class Automata
 	{
 		ArrayList<State> acceptStates_temp = new ArrayList<State>();
 		for(State state: states)
+		{
 			if(!acceptStates.contains(state))
 			{
 				acceptStates_temp.add(state);
 				state.setAccept(true);
 			}
+			else
+				state.setAccept(false);
+		}		
 		Automata complementAutomata = new Automata(startState, states, alphabet, acceptStates_temp, transitionFunction);
 		return complementAutomata;
 	}
@@ -297,9 +301,40 @@ public class Automata
     	ArrayList<State> acceptStates = new ArrayList<State>();
     	ArrayList<Transition> transitionFunction = new ArrayList<Transition>(); 
     	State newState;
-    	Transition newTrans;
+    	State bor = new State ("bor");
     	states.add(startState);
     	State state;
+    	for(int i=0; i<states.size(); i++)
+    	{
+    		state = states.get(i);
+    		for(AtomicProp input: alphabet)
+    		{
+    			ArrayList<State> destinationStates = this.getDestinationStates(state, input);
+    			if(destinationStates.size() ==1)
+    			{
+    				Transition newTrans = new Transition(state, input, destinationStates.get(0));
+    				transitionFunction.add(newTrans);
+    				if(!states.contains(destinationStates.get(0)))
+    					states.add(destinationStates.get(0));
+    			}
+    			else if(destinationStates.size() > 1)
+    			{
+    				newState = new State(destinationStates);
+    	    		if(!states.contains(newState))
+    	    			states.add(newState); 
+    	    		transitionFunction.add(new Transition(state, input, newState));
+    			}
+    			else  //There is no transition from the current state with the current input
+    			{
+    				Transition newTrans = new Transition(state, input, bor);
+    				transitionFunction.add(newTrans);
+    				if(!states.contains(bor))
+    					states.add(bor);
+    			}
+    		}
+    	}
+    	
+    	/*
     	for(int i=0; i<states.size(); i++)
 	    	{
     			state = states.get(i);
@@ -331,6 +366,7 @@ public class Automata
 	    		else
 	    		{
 	    			for(AtomicProp input: alphabet)
+	    				
 	    			{
 	    	    		ArrayList<State> destStates = new ArrayList<State>();
 	    	    		for(State containedState: state.getContainedStates())
@@ -357,7 +393,8 @@ public class Automata
 	    	    		}
 	    			}
 	    		}
-	    	}
+	    	} 
+	    	*/
     	/* accepted state of DFA will be state which has accepted state as its component*/
     	this.acceptStates.forEach(acceptState -> {
     		states.forEach(s ->{
