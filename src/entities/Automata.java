@@ -301,7 +301,6 @@ public class Automata
     	states.add(startState);
     	State state;
     	for(int i=0; i<states.size(); i++)
-    		//for(State state: states)
 	    	{
     			state = states.get(i);
 	    		if(state.getContainedStates().isEmpty())

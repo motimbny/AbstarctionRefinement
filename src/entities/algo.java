@@ -53,8 +53,12 @@ public class algo
 	  for(int i=0; i<m.size(); i++)
 	  {
 		  Automata ai = a.get(i).convertToAutomata(a.get(i).getInitialStates().get(0));
-		  System.out.println("\nai:\n"+ai.toString());
+		  System.out.println("\nai:\n"+ai.toString());		  
+		  ai = ai.convertToDeterministic();
+		  System.out.println("\ndeterministi ai:\n"+ai.toString());
 		  Automata mi = m.get(i).convertToAutomata(m.get(i).getInitialStates().get(0));
+		  System.out.println("\ndeterministi mi:\n"+mi.toString());
+		  mi = mi.convertToDeterministic();
 		  System.out.println("\nmi:\n"+mi.toString());
 		  if(a.get(i).getType() == kripkeType.Over)
 		  {
@@ -330,7 +334,15 @@ public class algo
 		State q6s = new State("q6"); 
 		State q7s = new State("q7"); 
 		State q8s = new State("q8"); 
+		q0s.setAccept(true);
+		q1s.setAccept(true);
+		q2s.setAccept(true);
 		q3s.setAccept(true);
+		q4s.setAccept(true);
+		q5s.setAccept(true);
+		q6s.setAccept(true);
+		q7s.setAccept(true);
+		q8s.setAccept(true);
 		ComplexState q0 = new ComplexState("q0");
 		ComplexState q1 = new ComplexState("q1");
 		ComplexState q2 = new ComplexState("q2");
@@ -382,10 +394,10 @@ public class algo
 		kripke.addTransitionRelation(q3, q5);
 		kripke.addTransitionRelation(q4, q6);
 		kripke.addTransitionRelation(q5, q8);		
-		System.out.println(kripke.toString());
+		System.out.println("\nregular kripke\n" + kripke.toString());
 		
 		KripkeSt under = underApproximation(kripke);
-		System.out.println("Under:\n"+under.toString());
+		System.out.println("\nUnder kripke:\n"+under.toString());
 		ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
 		mList.add(kripke);		
 		ArrayList<KripkeSt> aList = new ArrayList<KripkeSt>();
