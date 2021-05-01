@@ -20,10 +20,7 @@ public class algo
 	  this.m=m;
 	  this.p = p;
   }
-  private ArrayList<KripkeSt> createAbstraction(ArrayList<KripkeSt> m) 
-  {
-	return null;
-  }
+
   public boolean findResultMMC(String path)
   {
 	boolean answer=false;
@@ -95,10 +92,122 @@ public class algo
 	return max;
   }
   
-  private ArrayList<KripkeSt> refine(WordRun counterExampleA, ArrayList<KripkeSt> a2)
+  private static ArrayList<KripkeSt> refine(ArrayList<WordRun> counterExamples, ArrayList<KripkeSt> a,  ArrayList<KripkeSt> m)
   {
+	  ArrayList<ComplexState> states;
+	  WordRun ce;
+	  ComplexState stateToSplit, followState;
+	  ComplexState toFind;
+	  int j=0;
+	  for(int i=0; i<a.size(); i++)
+	  {
+		  states = findStateToSplit(counterExamples.get(i), a.get(i));
+		  stateToSplit = states.get(0);
+		  followState = states.get(1);
+		  System.out.println("\nstateToSplit:" + stateToSplit.getName());
+		  //split state
+		  split(a.get(i), stateToSplit, followState, m.get(i));
+	  }
 	return null;
   }
+  
+  private static KripkeSt split(KripkeSt a, ComplexState stateToSplit, ComplexState followState, KripkeSt m)
+  {
+	  Boolean isConnect = false;
+	  ArrayList<ComplexState> previousStates;
+	  ComplexState newComplexState = new ComplexState("");
+	  if(stateToSplit.equals(followState))
+	  { //over
+
+		  for(State state: stateToSplit.getContainingStates())
+		  {
+			  if(m.getRk().containsKey(state.convertToComplexState()))
+			  {
+				  for(State s: followState.getContainingStates())
+				  {
+					  if(m.getRk().get(state.convertToComplexState()).contains(s.convertToComplexState()))
+					  {
+						  isConnect = true;
+						  break;
+					  }
+				  }
+			  }
+			  if(!isConnect)
+			  {
+				  newComplexState.addContainingStates(state);
+				  newComplexState.setName(newComplexState.getName()+state.getName());
+				  stateToSplit.getContainingStates().remove(state);
+				  stateToSplit.setName(stateToSplit.getName().replace(state.getName(), ""));
+			  }
+		  }
+		  a.getStates().add(newComplexState);
+		  previousStates = a.getPreviousStates(stateToSplit);
+		  for(ComplexState state: previousStates)
+			  a.addTransitionRelation(state, newComplexState);
+	  }
+	  else //under
+	  {
+		  for(State state: stateToSplit.getContainingStates())
+		  {
+			  if(m.getRk().containsKey(state.convertToComplexState()))
+			  {
+				  for(State s: followState.getContainingStates())
+				  {
+					  if(m.getRk().get(state.convertToComplexState()).contains(s.convertToComplexState()))
+					  {
+						  newComplexState.addContainingStates(state);
+						  newComplexState.setName(newComplexState.getName()+state.getName());
+						  stateToSplit.getContainingStates().remove(state);
+						  stateToSplit.setName(stateToSplit.getName().replace(state.getName(), ""));
+						  break;  
+					  }  
+				  }
+			  }
+		  }
+		  a.getStates().add(newComplexState);
+		  a.addTransitionRelation(newComplexState, followState);
+		  previousStates = a.getPreviousStates(stateToSplit);
+		  for(ComplexState state: previousStates)
+			  a.addTransitionRelation(state, newComplexState);
+	  }
+	return a;
+  }
+  
+  
+  
+  private static ArrayList<ComplexState> findStateToSplit(WordRun counterExample, KripkeSt a)
+  {
+	  ArrayList<ComplexState> states = new ArrayList<ComplexState>();
+	  ComplexState state1, state2 = null;
+	  State toFind;
+	  int j=0;
+		  toFind = new State(counterExample.getRun().get(j));
+		   state1 = findState(toFind, a.getStates());
+		  while(true)
+		  {
+			  j++;
+			  if(counterExample.getRun().get(j).equals("r"))
+				  break;
+			  toFind = new State(counterExample.getRun().get(j));
+			   state2 = findState(toFind, a.getStates());
+			   if(!a.getRk().containsKey(state1) || !a.getRk().get(state1).contains(state2))
+				   break;
+			   state1 = state2;
+			   
+		  }
+		  states.add(state1);
+		  states.add(state2);
+		  return states;
+  }
+  
+  private static ComplexState findState(State toFind, ArrayList<ComplexState> states)
+  {
+	  for(ComplexState cmplxState: states)
+		  if(cmplxState.getContainingStates().contains(toFind))
+			  return cmplxState;
+	  return null;
+  }
+  
   public boolean runAbstraction()
   {
 	  //long endTime = System .nanoTime(); 
@@ -401,11 +510,12 @@ public class algo
 		q8.addLabel(d);		
 		KripkeSt kripke = new KripkeSt(states, initialStates, transitionRelation, kripkeType.Regular);
 		kripke.addTransitionRelation(q0, q3);
-		kripke.addTransitionRelation(q1, q4);
-		kripke.addTransitionRelation(q2, q5);
+//		kripke.addTransitionRelation(q1, q4);
+//		kripke.addTransitionRelation(q2, q5);
 		kripke.addTransitionRelation(q3, q5);
-		kripke.addTransitionRelation(q4, q6);
-		kripke.addTransitionRelation(q5, q8);		
+//		kripke.addTransitionRelation(q4, q6);
+//		kripke.addTransitionRelation(q5, q8);		
+		kripke.addTransitionRelation(q6, q8);
 		System.out.println("\nregular kripke\n" + kripke.toString());
 		
 		KripkeSt over = overApproximation(kripke);
@@ -416,5 +526,6 @@ public class algo
 		aList.add(over);
 		ArrayList<WordRun> ce = getCEX( aList, mList);
 		System.out.println(ce.get(0).getRun().toString());
+		refine( ce , aList, mList);
   }
 }

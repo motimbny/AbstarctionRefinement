@@ -205,6 +205,16 @@ public class KripkeSt
 		
 		return new KripkeSt(states, initialStates, (HashMap<ComplexState,ArrayList<ComplexState>>)this.transitionRelation.clone(), this.type);
 	}
+	
+	public ArrayList<ComplexState> getPreviousStates(ComplexState state)
+	{
+		ArrayList<ComplexState> previousStates =  new ArrayList<ComplexState>();
+		this.getRk().forEach((key, value) -> {
+		    if (value.contains(state)) 
+		    	previousStates.add(key);
+		});
+		return previousStates;
+	}
 
 	public static void main(String[]args)
 	{
