@@ -92,7 +92,7 @@ public class algo
 	return max;
   }
   
-  private static ArrayList<KripkeSt> refine(ArrayList<WordRun> counterExamples, ArrayList<KripkeSt> a,  ArrayList<KripkeSt> m)
+  private static void refine(ArrayList<WordRun> counterExamples, ArrayList<KripkeSt> a,  ArrayList<KripkeSt> m)
   {
 	  ArrayList<ComplexState> states;
 	  WordRun ce;
@@ -108,7 +108,6 @@ public class algo
 		  //split state
 		  split(a.get(i), stateToSplit, followState, m.get(i));
 	  }
-	return null;
   }
   
   private static KripkeSt split(KripkeSt a, ComplexState stateToSplit, ComplexState followState, KripkeSt m)
@@ -226,7 +225,7 @@ public class algo
 		  else
 		  {
 			  counterExampleA=getCEX(a,m);
-			  a=refine(counterExampleA,a);
+			  refine(counterExampleA,a, m);
 		  }
 		  resb=mmc.runMMCF(b, p);
 		  if(resb)
@@ -234,7 +233,7 @@ public class algo
 		  else
 		  {
 			  counterExampleB=getCEX(b,m);
-			  b=refine(counterExampleB,b);
+			  refine(counterExampleB,b, m);
 		  }
 	  }
   }
@@ -518,14 +517,11 @@ public class algo
 		kripke.addTransitionRelation(q6, q8);
 		System.out.println("\nregular kripke\n" + kripke.toString());
 		
-		KripkeSt over = overApproximation(kripke);
-		System.out.println("\nover kripke:\n"+over.toString());
 		ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
 		mList.add(kripke);		
-		ArrayList<KripkeSt> aList = new ArrayList<KripkeSt>();
-		aList.add(over);
-		ArrayList<WordRun> ce = getCEX( aList, mList);
-		System.out.println(ce.get(0).getRun().toString());
-		refine( ce , aList, mList);
+		ArrayList<Quantifier> p = new ArrayList<Quantifier>();
+		p.add(Quantifier.forEach);
+		algo alg = new algo(mList, p);
+		alg.runAbstraction();
   }
 }
