@@ -1,13 +1,16 @@
 package entities;
 import enums.Quantifier;
 import enums.kripkeType;
+import gui.secondPgCNT;
+import gui.thirdPgCNT;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
-public class algo 
+public class Algo  implements Runnable
 {
   private ArrayList<KripkeSt> m;
   private ArrayList<KripkeSt> a;
@@ -15,7 +18,7 @@ public class algo
   private ArrayList<Quantifier> p;
   static long totalTime;
   
-  public algo(ArrayList<KripkeSt> m, ArrayList<Quantifier> p)
+  public Algo(ArrayList<KripkeSt> m, ArrayList<Quantifier> p)
   {
 	  this.m=m;
 	  this.p = p;
@@ -50,13 +53,11 @@ public class algo
 	  for(int i=0; i<m.size(); i++)
 	  {
 		  Automata ai = a.get(i).convertToAutomata(a.get(i).getInitialStates().get(0));
-		  System.out.println("\nai:\n"+ai.toString());		   
+		  System.out.println("\nautomat ai:\n"+ai.toString());		   
 		  Automata mi = m.get(i).convertToAutomata(m.get(i).getInitialStates().get(0));
-		  System.out.println("\nmi:\n"+mi.toString()); 
+		  System.out.println("\nautomat mi:\n"+mi.toString()); 
 		  ai = ai.convertToDeterministic();
-		  System.out.println("\ndeterministi ai:\n"+ai.toString());
 		  mi = mi.convertToDeterministic();
-		  System.out.println("\ndeterministi mi:\n"+mi.toString());
 		  if(a.get(i).getType() == kripkeType.Over)
 		  {
 			  ai = ai.getComplementAutomata();
@@ -68,9 +69,7 @@ public class algo
 		  else
 		  {
 			  mi = mi.getComplementAutomata();
-			  System.out.println("\nmi:\n"+mi.toString());
 			  intersrctionAutomata = mi.getIntersection(ai);
-			  System.out.println("\nhituh::\n"+intersrctionAutomata.toString());
 			  bFSpath = intersrctionAutomata.getPath();
 			  if(!bFSpath.isEmpty())
 				  wi = new WordRun(findMaxList(bFSpath), kripkeType.Under);	  
@@ -96,21 +95,22 @@ public class algo
   {
 	  ArrayList<ComplexState> states;
 	  WordRun ce;
-	  ComplexState stateToSplit, followState;
+	  ComplexState prevState, stateToSplit, followState;
 	  ComplexState toFind;
 	  int j=0;
 	  for(int i=0; i<a.size(); i++)
 	  {
 		  states = findStateToSplit(counterExamples.get(i), a.get(i));
-		  stateToSplit = states.get(0);
-		  followState = states.get(1);
+		  prevState = states.get(0);
+		  stateToSplit = states.get(1);
+		  followState = states.get(2);
 		  System.out.println("\nstateToSplit:" + stateToSplit.getName());
 		  //split state
-		  split(a.get(i), stateToSplit, followState, m.get(i));
+		  split(a.get(i), stateToSplit, followState, prevState, m.get(i));
 	  }
   }
   
-  private static KripkeSt split(KripkeSt a, ComplexState stateToSplit, ComplexState followState, KripkeSt m)
+  private static KripkeSt split(KripkeSt a, ComplexState stateToSplit, ComplexState followState, ComplexState prevState, KripkeSt m)
   {
 	  Boolean isConnect = false;
 	  ArrayList<ComplexState> previousStates;
@@ -118,8 +118,9 @@ public class algo
 	  if(stateToSplit.equals(followState))
 	  { //over
 
-		  for(State state: stateToSplit.getContainingStates())
+		  for(int i=0; i<stateToSplit.getContainingStates().size(); i++)
 		  {
+			  State state = stateToSplit.getContainingStates().get(i);
 			  if(m.getRk().containsKey(state.convertToComplexState()))
 			  {
 				  for(State s: followState.getContainingStates())
@@ -135,6 +136,7 @@ public class algo
 			  {
 				  newComplexState.addContainingStates(state);
 				  newComplexState.setName(newComplexState.getName()+state.getName());
+				  newComplexState.setLabels(stateToSplit.getLabels());
 				  stateToSplit.getContainingStates().remove(state);
 				  stateToSplit.setName(stateToSplit.getName().replace(state.getName(), ""));
 			  }
@@ -143,6 +145,8 @@ public class algo
 		  previousStates = a.getPreviousStates(stateToSplit);
 		  for(ComplexState state: previousStates)
 			  a.addTransitionRelation(state, newComplexState);
+		  if(prevState != null)
+			  a.removeTransitionRelation(prevState, stateToSplit);
 	  }
 	  else //under
 	  {
@@ -156,6 +160,7 @@ public class algo
 					  {
 						  newComplexState.addContainingStates(state);
 						  newComplexState.setName(newComplexState.getName()+state.getName());
+						  newComplexState.setLabels(stateToSplit.getLabels());
 						  stateToSplit.getContainingStates().remove(state);
 						  stateToSplit.setName(stateToSplit.getName().replace(state.getName(), ""));
 						  break;  
@@ -177,12 +182,12 @@ public class algo
   private static ArrayList<ComplexState> findStateToSplit(WordRun counterExample, KripkeSt a)
   {
 	  ArrayList<ComplexState> states = new ArrayList<ComplexState>();
-	  ComplexState state1, state2 = null;
+	  ComplexState statePrev = null, state1, state2 = null;
 	  State toFind;
 	  int j=0;
 		  toFind = new State(counterExample.getRun().get(j));
 		   state1 = findState(toFind, a.getStates());
-		  while(true)
+		  while(j < counterExample.getRun().size()-1)
 		  {
 			  j++;
 			  if(counterExample.getRun().get(j).equals("r"))
@@ -191,9 +196,11 @@ public class algo
 			   state2 = findState(toFind, a.getStates());
 			   if(!a.getRk().containsKey(state1) || !a.getRk().get(state1).contains(state2))
 				   break;
+			   statePrev = state1;
 			   state1 = state2;
 			   
 		  }
+		  states.add(statePrev);
 		  states.add(state1);
 		  states.add(state2);
 		  return states;
@@ -225,6 +232,7 @@ public class algo
 		  else
 		  {
 			  counterExampleA=getCEX(a,m);
+			  System.out.println("\ncounter ex A: "+counterExampleA.get(0).getRun());
 			  refine(counterExampleA,a, m);
 		  }
 		  resb=mmc.runMMCF(b, p);
@@ -233,6 +241,7 @@ public class algo
 		  else
 		  {
 			  counterExampleB=getCEX(b,m);
+			  System.out.println("\ncounter ex B: "+counterExampleB.get(0).getRun());
 			  refine(counterExampleB,b, m);
 		  }
 	  }
@@ -509,19 +518,29 @@ public class algo
 		q8.addLabel(d);		
 		KripkeSt kripke = new KripkeSt(states, initialStates, transitionRelation, kripkeType.Regular);
 		kripke.addTransitionRelation(q0, q3);
-//		kripke.addTransitionRelation(q1, q4);
-//		kripke.addTransitionRelation(q2, q5);
+		kripke.addTransitionRelation(q1, q4);
+		kripke.addTransitionRelation(q2, q5);
 		kripke.addTransitionRelation(q3, q5);
-//		kripke.addTransitionRelation(q4, q6);
-//		kripke.addTransitionRelation(q5, q8);		
-		kripke.addTransitionRelation(q6, q8);
+		kripke.addTransitionRelation(q4, q6);
+		kripke.addTransitionRelation(q5, q8);		
+//		kripke.addTransitionRelation(q6, q8);
 		System.out.println("\nregular kripke\n" + kripke.toString());
 		
-		ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
+	/*	ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
 		mList.add(kripke);		
 		ArrayList<Quantifier> p = new ArrayList<Quantifier>();
 		p.add(Quantifier.forEach);
 		algo alg = new algo(mList, p);
-		alg.runAbstraction();
+		alg.runAbstraction();		*/
+		
+		Parser par = new Parser("C:\\Users\\Adi Alaluf\\git\\AbstarctionRefinement");
+		par.parseNFA(underApproximation(kripke).convertToAutomata(new ComplexState("q0q1")));
   }
+
+	@Override
+	public synchronized void run() 
+	{
+		secondPgCNT.result = runAbstraction();
+		notifyAll();
+	}
 }

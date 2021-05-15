@@ -3,8 +3,6 @@ import gui.GuiManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-
-
 public class MainClass extends Application  
 {
 	

@@ -6,9 +6,11 @@ import java.io.File;
 public class textFile
 {
 	public File myfile; 
+	public String path;
     public textFile(String file)
     {
     	myfile=new File(file);
+    	path = file;
     }
     public String fileToString()
     {

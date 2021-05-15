@@ -20,5 +20,6 @@
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
 	<classpathentry kind="lib" path="itextpdf-5.5.9.jar"/>
 	<classpathentry kind="lib" path="pdfbox-3.0.0-RC1.jar"/>
+	<classpathentry kind="lib" path="json-simple-1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

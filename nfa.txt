@@ -1,0 +1,6 @@
+Number of states: 4
+The movement matrix:{{q2q3q4}{-1}{-1}{-1}$},{{-1}{q5q6}{-1}{-1}$},{{-1}{-1}{-1}{-1}$},{{-1}{-1}{-1}{-1}$}
+The alphabet:{a,b,c,d}
+Number of final states: 4
+The final states:{q0q1,q2q3q4,q5q6,q7q8}
+The initail state: q0q1

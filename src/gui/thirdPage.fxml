@@ -31,7 +31,7 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="timeArea" editable="false" layoutX="242.0" layoutY="190.0" prefHeight="25.0" prefWidth="70.0" promptText="02:47" />
+      <TextField fx:id="timeArea" editable="false" layoutX="242.0" layoutY="190.0" prefHeight="25.0" prefWidth="70.0" />
       <ImageView fitHeight="115.0" fitWidth="173.0" layoutX="228.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/Spinner-1s-200px.gif" />

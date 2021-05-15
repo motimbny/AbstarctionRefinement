@@ -84,6 +84,14 @@ public class KripkeSt
 		}
 	}
 	
+	public void removeTransitionRelation(ComplexState src, ComplexState dest)
+	{
+		ArrayList<ComplexState> transitions = transitionRelation.get(src);
+		for(ComplexState state: transitions)
+			if(state.equals(dest))
+				transitions.remove(state);
+	}
+	
 	/**
      * Returns a string that contains all the characteristics of the kripke structure.
      */

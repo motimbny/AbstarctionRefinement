@@ -175,11 +175,11 @@ public class Automata
         	if(parent.get(detenation) == null)
         		break;
             path.addFirst(detenation);
-            System.out.print(detenation.getName() + " <- "); //for testing
+ //           System.out.print(detenation.getName() + " <- "); //for testing
             detenation = parent.get(detenation);
         }
         path.addFirst(detenation);
-        System.out.println(detenation.getName());   //for testing
+ //       System.out.println(detenation.getName());   //for testing
         return path;
     }
     
