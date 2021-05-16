@@ -40,8 +40,8 @@ public class secondPgCNT implements Initializable
     public static long startTime;
     private TxtInput parserMultiModel;
     private TxtInput parserMultiLTL;
-    public ArrayList<KripkeSt> multiModel;
-    public ArrayList<Quantifier> multiLTL;
+    public static ArrayList<KripkeSt> multiModel;
+    public static ArrayList<Quantifier> multiLTL;
     public static Algo algorithm;
     public static boolean result;
     public static boolean finish;

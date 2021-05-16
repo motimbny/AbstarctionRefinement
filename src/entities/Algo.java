@@ -14,7 +14,9 @@ public class Algo  implements Runnable
 {
   private ArrayList<KripkeSt> m;
   private ArrayList<KripkeSt> a;
-  private ArrayList<KripkeSt> b;
+
+
+private ArrayList<KripkeSt> b;
   private ArrayList<Quantifier> p;
   static long totalTime;
   
@@ -23,7 +25,9 @@ public class Algo  implements Runnable
 	  this.m=m;
 	  this.p = p;
   }
-
+  public ArrayList<KripkeSt> getA() {
+	return a;
+}
   public boolean findResultMMC(String path)
   {
 	boolean answer=false;
