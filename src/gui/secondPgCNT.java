@@ -45,7 +45,7 @@ public class secondPgCNT implements Initializable
     public static ArrayList<Quantifier> multiLTL;
     public static Algo algorithm;
     public static boolean result;
-    public static boolean finish;
+    public static boolean finish = false;
 
     @FXML
     void backToFirstPage(MouseEvent event) {

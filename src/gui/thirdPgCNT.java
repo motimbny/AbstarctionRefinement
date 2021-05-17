@@ -1,23 +1,18 @@
 package gui;
 import enums.SCREENS;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 
-import entities.Algo;
 
 public class thirdPgCNT implements Initializable, Runnable
 {	
@@ -32,13 +27,13 @@ public class thirdPgCNT implements Initializable, Runnable
     private ImageView backToSecondPageBTN;
 
     @FXML
-    public static Label resShow;
+    public Label resShow;
     private Node thisNode;
 
     @FXML
-    public static TextField timeArea;
-    static double totalTime;
-    static String resultMP;
+    public TextField timeArea;
+    public static  double totalTime;
+    public static String resultMP;
     public static Object lock=new Object();
     @FXML
     void backToSecondPage(MouseEvent event) {
@@ -54,14 +49,14 @@ public class thirdPgCNT implements Initializable, Runnable
 
     public void update()
     {
-    	System.out.println("thirdpage update wait");
+    	System.out.println("thirdpage update wait\nthread name1: "+Thread.currentThread().getName());
     	if(secondPgCNT.endTime==-1)
     	{
 	    	synchronized (lock)
 	    	{
 	    		try {
 					lock.wait();
-			    	System.out.println("thirdpage update after wait");
+			    	System.out.println("thirdpage update after wait \nthread name2: "+Thread.currentThread().getName());
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -73,17 +68,14 @@ public class thirdPgCNT implements Initializable, Runnable
     	    resultMP= (secondPgCNT.result) ? "M |= P": "M |/= P";
 	    	System.out.println("resultmp : "+resultMP);
 	    	System.out.println("im stuck here 1");
-			Parent root;
-		try {
-				root = FXMLLoader.load(getClass().getResource("thirdPage.fxml"));
-				Label lblData = (Label) root.lookup("#resShow");
-				lblData.setText("bye");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    	System.out.println("im stuck here 2");
-    	Thread.currentThread().interrupt();
+	    	System.out.println("im stuck here 2\nthread name3: "+Thread.currentThread().getName());
+	    	Platform.runLater(new Runnable() {
+	    	      @Override public void run() {
+	    	    	  resShow.setText(resultMP);
+	    	    	  System.out.println("total time is : "+totalTime); 
+	    	    	  timeArea.setText(""+totalTime+" sec");	    	      }
+	    	});
+	    	Thread.currentThread().interrupt();
     }
     
 	@Override
@@ -98,4 +90,5 @@ public class thirdPgCNT implements Initializable, Runnable
 	{
              update();	 
 	}
+
 }

@@ -3,7 +3,10 @@ import enums.Quantifier;
 import enums.kripkeType;
 import gui.secondPgCNT;
 import gui.thirdPgCNT;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -542,10 +545,10 @@ private ArrayList<KripkeSt> b;
 	public void run() 
 	{
 		secondPgCNT.result = runAbstraction();
-		System.out.println("i finished and result "+secondPgCNT.result);
+		System.out.println("i finished and result "+secondPgCNT.result +"\nthread name algo: " + Thread.currentThread().getName());
 		synchronized (thirdPgCNT.lock) {
 			thirdPgCNT.lock.notifyAll();
-    	    secondPgCNT.endTime = System .nanoTime(); 
+    	    secondPgCNT.endTime = System.nanoTime(); 
 		}
 	}
 }

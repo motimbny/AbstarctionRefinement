@@ -26,7 +26,7 @@
             <Image url="@../images/Capture.JPG" />
          </image>
       </ImageView>
-      <Label fx:id="resShow" layoutX="307.0" layoutY="239.0" styleClass="labellow" text="M |= P">
+      <Label fx:id="resShow" layoutX="307.0" layoutY="239.0" styleClass="labellow">
          <font>
             <Font size="18.0" />
          </font>

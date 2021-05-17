@@ -24,4 +24,3 @@ public class MainClass extends Application
 		}
 	}
 }
-
