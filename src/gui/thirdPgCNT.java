@@ -21,6 +21,10 @@ import entities.Algo;
 
 public class thirdPgCNT implements Initializable, Runnable
 {	
+	public thirdPgCNT()
+	{
+		
+	}
     @FXML
     private Button resBTN;
 
@@ -33,7 +37,9 @@ public class thirdPgCNT implements Initializable, Runnable
 
     @FXML
     public static TextField timeArea;
-
+    static double totalTime;
+    static String resultMP;
+    public static Object lock=new Object();
     @FXML
     void backToSecondPage(MouseEvent event) {
     	thisNode = ((Node) event.getSource());
@@ -46,31 +52,38 @@ public class thirdPgCNT implements Initializable, Runnable
     	GuiManager.SwitchScene(SCREENS.fourthp,(Stage)thisNode.getScene().getWindow());  
     }
 
-    public synchronized void update()
+    public void update()
     {
-    	System.out.println("hi");
-    	try {
-			wait();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		if(secondPgCNT.result)
-			resShow.setText("M |= P");
-		else
-			resShow.setText("M |/= P");
-		System.out.println("time");
-		timeArea.setText("5:40");
-		Parent root;
+    	System.out.println("thirdpage update wait");
+    	if(secondPgCNT.endTime==-1)
+    	{
+	    	synchronized (lock)
+	    	{
+	    		try {
+					lock.wait();
+			    	System.out.println("thirdpage update after wait");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    	}
+    	}
+			totalTime=(double)(secondPgCNT.endTime-secondPgCNT.startTime)/ 1_000_000_000;
+			System.out.println("total time is : "+totalTime); 
+    	    resultMP= (secondPgCNT.result) ? "M |= P": "M |/= P";
+	    	System.out.println("resultmp : "+resultMP);
+	    	System.out.println("im stuck here 1");
+			Parent root;
 		try {
-			root = FXMLLoader.load(getClass().getResource("thirdPage.fxml"));
-			Label lblData = (Label) root.lookup("#resShow");
-			lblData.setText("bye");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
+				root = FXMLLoader.load(getClass().getResource("thirdPage.fxml"));
+				Label lblData = (Label) root.lookup("#resShow");
+				lblData.setText("bye");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	System.out.println("im stuck here 2");
+    	Thread.currentThread().interrupt();
     }
     
 	@Override
@@ -81,9 +94,8 @@ public class thirdPgCNT implements Initializable, Runnable
 	}
 
 	@Override
-	public void run() {
-		update();
-		
+	public void run() 
+	{
+             update();	 
 	}
-
 }

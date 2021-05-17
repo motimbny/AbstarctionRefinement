@@ -38,6 +38,7 @@ public class secondPgCNT implements Initializable
     private ImageView backToFirstPageBTN;
     private Node thisNode;
     public static long startTime;
+    public static long endTime=-1;
     private TxtInput parserMultiModel;
     private TxtInput parserMultiLTL;
     public static ArrayList<KripkeSt> multiModel;

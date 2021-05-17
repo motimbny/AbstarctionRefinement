@@ -50,8 +50,8 @@ public class fourPgCNT  implements Initializable {
     	pdmkr=new pdfMaker(dateName);
     	String[] content=new String[] {"","","","","","",""};
     	content[0]="-------------Abstarction run results---------\n";
-    	content[1]="Time: \n";
-    	content[2]="Result: \n";
+    	content[1]="Time:"+thirdPgCNT.totalTime+" sec\n";
+    	content[2]="Result:"+thirdPgCNT.resultMP+"\n";
     	content[3]="Date:"+dateFormat.format(date).toString()+"\n";
     	content[4]="Input m:\n "+secondPgCNT.multiModel.get(0).toString()+"\n";
     	content[5]="Input p:\n "+secondPgCNT.multiLTL.get(0).toString()+"\n";
@@ -70,6 +70,8 @@ public class fourPgCNT  implements Initializable {
 		mView.setText(secondPgCNT.multiModel.get(0).toString());
 		pview.setText(secondPgCNT.multiLTL.get(0).toString());
 		aview.setText(secondPgCNT.algorithm.getA().get(0).toString());
+		timeTEXT.setText(""+thirdPgCNT.totalTime+" sec");
+		resTEXT.setText(thirdPgCNT.resultMP);
 	}
 
 }

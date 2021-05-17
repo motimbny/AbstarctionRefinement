@@ -18,7 +18,6 @@ public class Algo  implements Runnable
 
 private ArrayList<KripkeSt> b;
   private ArrayList<Quantifier> p;
-  static long totalTime;
   
   public Algo(ArrayList<KripkeSt> m, ArrayList<Quantifier> p)
   {
@@ -220,9 +219,7 @@ private ArrayList<KripkeSt> b;
   
   public boolean runAbstraction()
   {
-	  //long endTime = System .nanoTime(); 
-	  //totalTime=endTime-secondPgCNT.startTime;
-	  //System.out.println("total time is : "+totalTime); 
+	  
 	  boolean resa,resb;
 	  ArrayList<WordRun> counterExampleA;
 	  ArrayList<WordRun> counterExampleB;
@@ -542,9 +539,13 @@ private ArrayList<KripkeSt> b;
   }
 
 	@Override
-	public synchronized void run() 
+	public void run() 
 	{
 		secondPgCNT.result = runAbstraction();
-		notifyAll();
+		System.out.println("i finished and result "+secondPgCNT.result);
+		synchronized (thirdPgCNT.lock) {
+			thirdPgCNT.lock.notifyAll();
+    	    secondPgCNT.endTime = System .nanoTime(); 
+		}
 	}
 }
