@@ -3,10 +3,6 @@ import enums.Quantifier;
 import enums.kripkeType;
 import gui.secondPgCNT;
 import gui.thirdPgCNT;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,6 +23,46 @@ private ArrayList<KripkeSt> b;
 	  this.m=m;
 	  this.p = p;
   }
+  
+  
+  public boolean runAbstraction()
+  {	  
+	  boolean resa,resb;
+	  ArrayList<WordRun> counterExampleA;
+	  ArrayList<WordRun> counterExampleB;
+	  MMC mmc=new MMC();
+	  initialize();
+	  while(true)
+	  {
+		  resa=mmc.runMMCF(a, p);
+		  if(resa)// || checkKripkeSize(a))  // we use checkKripkeSize() because we don't have a real MMC result  
+			  return true;
+		  else
+		  {
+			  counterExampleA=getCEX(a,m);
+			//  System.out.println("\ncounter ex A: "+counterExampleA.get(0).getRun());
+			  refine(counterExampleA,a, m);
+		  }
+		  resb=mmc.runMMCF(b, p);
+		  if(resb)// || checkKripkeSize(b)) //we use checkKripkeSize() because we don't have a real MMC result  
+			  return false;
+		  else
+		  {
+			  counterExampleB=getCEX(b,m);
+			//  System.out.println("\ncounter ex B: "+counterExampleB.get(0).getRun());
+			  refine(counterExampleB,b, m);
+		  }
+	  }
+  }
+  
+  private Boolean checkKripkeSize(ArrayList<KripkeSt> abstractionList)
+  {
+	for(int i=0; i<m.size(); i++)
+		if(m.get(i).getStates().size() != abstractionList.get(i).getStates().size())
+			return false;
+	return true;
+  }
+  
   public ArrayList<KripkeSt> getA() {
 	return a;
 }
@@ -36,7 +72,6 @@ private ArrayList<KripkeSt> b;
 	try 
 	{     
 	    PdfReader reader = new PdfReader(path);
-	    int n = reader.getNumberOfPages(); 
 	    String str=PdfTextExtractor.getTextFromPage(reader, 1); //Extracting the content from a particular page.
         reader.close();
         String ans;
@@ -100,10 +135,7 @@ private ArrayList<KripkeSt> b;
   private static void refine(ArrayList<WordRun> counterExamples, ArrayList<KripkeSt> a,  ArrayList<KripkeSt> m)
   {
 	  ArrayList<ComplexState> states;
-	  WordRun ce;
 	  ComplexState prevState, stateToSplit, followState;
-	  ComplexState toFind;
-	  int j=0;
 	  for(int i=0; i<a.size(); i++)
 	  {
 		  states = findStateToSplit(counterExamples.get(i), a.get(i));
@@ -156,8 +188,9 @@ private ArrayList<KripkeSt> b;
 	  }
 	  else //under
 	  {
-		  for(State state: stateToSplit.getContainingStates())
+		  for(int i=0; i<stateToSplit.getContainingStates().size(); i++)
 		  {
+			  State state = stateToSplit.getContainingStates().get(i);
 			  if(m.getRk().containsKey(state.convertToComplexState()))
 			  {
 				  for(State s: followState.getContainingStates())
@@ -177,13 +210,52 @@ private ArrayList<KripkeSt> b;
 		  a.getStates().add(newComplexState);
 		  a.addTransitionRelation(newComplexState, followState);
 		  previousStates = a.getPreviousStates(stateToSplit);
-		  for(ComplexState state: previousStates)
-			  a.addTransitionRelation(state, newComplexState);
-	  }
+		  connectInboundEdgesUnder(previousStates, a, stateToSplit);
+		  previousStates = a.getPreviousStates(newComplexState);
+		  connectInboundEdgesUnder(previousStates, a, newComplexState);
+	 }
 	return a;
   }
   
-  
+  private static void connectInboundEdgesUnder(ArrayList<ComplexState> previousStates, KripkeSt a, ComplexState state)
+  {
+	  Boolean isConnect = false;
+	  for(ComplexState prev: previousStates)  //connect back transition
+	  {
+		  for(State stateInPrevState: prev.getContainingStates())
+		  {
+			  isConnect = false;
+			  ArrayList<ComplexState> destinationStates = a.getRk().get(stateInPrevState.convertToComplexState()); //list of all states that stateInSrc connect to
+			  if(destinationStates != null)
+			  {
+				  for(ComplexState stateInDest: destinationStates)
+				  {
+					  if(state.getContainingStates().contains(stateInDest.convertToState()))
+					  {
+						  isConnect = true;
+						  break;
+					  }
+				  }
+			  }
+			  if(!isConnect)
+				  break;
+		  }
+		  if(isConnect)
+		  {
+			  if(a.getRk().containsKey(prev))
+			  {
+				  a.getRk().get(prev).add(state);
+			  }
+			  else
+			  {
+				  ArrayList<ComplexState> destStates = new ArrayList<ComplexState>();
+				  destStates.add(state);
+				  a.getRk().put(state, destStates);
+			  }
+		  }
+	  }		
+	  
+  }
   
   private static ArrayList<ComplexState> findStateToSplit(WordRun counterExample, KripkeSt a)
   {
@@ -219,37 +291,7 @@ private ArrayList<KripkeSt> b;
 			  return cmplxState;
 	  return null;
   }
-  
-  public boolean runAbstraction()
-  {
-	  
-	  boolean resa,resb;
-	  ArrayList<WordRun> counterExampleA;
-	  ArrayList<WordRun> counterExampleB;
-	  MMC mmc=new MMC();
-	  initialize();
-	  while(true)
-	  {
-		  resa=mmc.runMMCF(a, p);
-		  if(resa)
-			  return true;
-		  else
-		  {
-			  counterExampleA=getCEX(a,m);
-			  System.out.println("\ncounter ex A: "+counterExampleA.get(0).getRun());
-			  refine(counterExampleA,a, m);
-		  }
-		  resb=mmc.runMMCF(b, p);
-		  if(resb)
-			  return false;
-		  else
-		  {
-			  counterExampleB=getCEX(b,m);
-			  System.out.println("\ncounter ex B: "+counterExampleB.get(0).getRun());
-			  refine(counterExampleB,b, m);
-		  }
-	  }
-  }
+
   
   private static KripkeSt underApproximation(KripkeSt m) throws CloneNotSupportedException
   {
@@ -530,15 +572,15 @@ private ArrayList<KripkeSt> b;
 //		kripke.addTransitionRelation(q6, q8);
 		System.out.println("\nregular kripke\n" + kripke.toString());
 		
-	/*	ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
+		ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
 		mList.add(kripke);		
 		ArrayList<Quantifier> p = new ArrayList<Quantifier>();
 		p.add(Quantifier.forEach);
-		algo alg = new algo(mList, p);
-		alg.runAbstraction();		*/
+		Algo alg = new Algo(mList, p);
+		alg.runAbstraction();		
 		
-		Parser par = new Parser("C:\\Users\\Adi Alaluf\\git\\AbstarctionRefinement");
-		par.parseNFA(underApproximation(kripke).convertToAutomata(new ComplexState("q0q1")));
+		//Parser par = new Parser("C:\\Users\\Adi Alaluf\\git\\AbstarctionRefinement");
+	//	par.parseNFA(underApproximation(kripke).convertToAutomata(new ComplexState("q0q1")));
   }
 
 	@Override

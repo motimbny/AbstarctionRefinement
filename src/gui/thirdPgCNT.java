@@ -29,6 +29,8 @@ public class thirdPgCNT implements Initializable, Runnable
     @FXML
     public Label resShow;
     private Node thisNode;
+    @FXML
+    private ImageView loadIcon;
 
     @FXML
     public TextField timeArea;
@@ -71,6 +73,7 @@ public class thirdPgCNT implements Initializable, Runnable
 	    	System.out.println("im stuck here 2\nthread name3: "+Thread.currentThread().getName());
 	    	Platform.runLater(new Runnable() {
 	    	      @Override public void run() {
+	    	    	  loadIcon.setVisible(false);
 	    	    	  resShow.setText(resultMP);
 	    	    	  System.out.println("total time is : "+totalTime); 
 	    	    	  timeArea.setText(""+totalTime+" sec");	    	      }
