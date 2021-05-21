@@ -13,9 +13,6 @@ public class MMC
    }
    public boolean runMMCF(ArrayList<KripkeSt> m, ArrayList<Quantifier> p)
    {
-	   if(i==0)
-		   return true;
-	   i--;
 	   return false;
    }
    

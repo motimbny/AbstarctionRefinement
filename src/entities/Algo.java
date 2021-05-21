@@ -35,21 +35,19 @@ private ArrayList<KripkeSt> b;
 	  while(true)
 	  {
 		  resa=mmc.runMMCF(a, p);
-		  if(resa)// || checkKripkeSize(a))  // we use checkKripkeSize() because we don't have a real MMC result  
+		  if(resa || checkKripkeSize(a))  // we use checkKripkeSize() because we don't have a real MMC result  
 			  return true;
 		  else
 		  {
 			  counterExampleA=getCEX(a,m);
-			//  System.out.println("\ncounter ex A: "+counterExampleA.get(0).getRun());
 			  refine(counterExampleA,a, m);
 		  }
 		  resb=mmc.runMMCF(b, p);
-		  if(resb)// || checkKripkeSize(b)) //we use checkKripkeSize() because we don't have a real MMC result  
+		  if(resb|| checkKripkeSize(b)) //we use checkKripkeSize() because we don't have a real MMC result  
 			  return false;
 		  else
 		  {
 			  counterExampleB=getCEX(b,m);
-			//  System.out.println("\ncounter ex B: "+counterExampleB.get(0).getRun());
 			  refine(counterExampleB,b, m);
 		  }
 	  }
@@ -93,6 +91,11 @@ private ArrayList<KripkeSt> b;
 	  ArrayList<WordRun> counterExamples = new ArrayList<WordRun>();
 	  for(int i=0; i<m.size(); i++)
 	  {
+		  if(m.get(i).getStates().size() == a.get(i).getStates().size())
+		  {
+			counterExamples.add(null);
+			continue;  
+		  }
 		  Automata ai = a.get(i).convertToAutomata(a.get(i).getInitialStates().get(0));
 		  System.out.println("\nautomat ai:\n"+ai.toString());		   
 		  Automata mi = m.get(i).convertToAutomata(m.get(i).getInitialStates().get(0));
@@ -138,12 +141,12 @@ private ArrayList<KripkeSt> b;
 	  ComplexState prevState, stateToSplit, followState;
 	  for(int i=0; i<a.size(); i++)
 	  {
+		  if(counterExamples.get(i)==null)
+              continue;
 		  states = findStateToSplit(counterExamples.get(i), a.get(i));
 		  prevState = states.get(0);
 		  stateToSplit = states.get(1);
 		  followState = states.get(2);
-		  System.out.println("\nstateToSplit:" + stateToSplit.getName());
-		  //split state
 		  split(a.get(i), stateToSplit, followState, prevState, m.get(i));
 	  }
   }

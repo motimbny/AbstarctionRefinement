@@ -143,7 +143,7 @@ public class KripkeSt
     	if(tempIndex != -1)
     		labelingFuncStr.deleteCharAt(labelingFuncStr.lastIndexOf(","));
     	labelingFuncStr.append("}\n");    	
-    	String result = statesStr.toString() + initStatesStr.toString() + transitionFuncStr.toString() + labelingFuncStr.toString() + "Type: " + type.toString() + "\nCount:" + counter;
+    	String result = statesStr.toString() + initStatesStr.toString() + transitionFuncStr.toString() + labelingFuncStr.toString() + "Type: " + type.toString();
     	return result;
     }
 	
