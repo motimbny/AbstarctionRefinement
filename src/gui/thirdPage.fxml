@@ -38,5 +38,10 @@
          </image>
       </ImageView>
       <Label layoutX="72.0" layoutY="29.0" styleClass="labellow" text="back" />
+      <ImageView fx:id="helpBTN" fitHeight="115.0" fitWidth="141.0" layoutX="-11.0" layoutY="288.0" onMouseClicked="#helpScrn" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/help.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

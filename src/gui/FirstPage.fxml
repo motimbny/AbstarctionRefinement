@@ -39,5 +39,10 @@
          <image>
             <Image url="@../images/clip.png" />
          </image></ImageView>
+      <ImageView fx:id="helpBTN" fitHeight="113.0" fitWidth="148.0" layoutX="-17.0" layoutY="297.0" onMouseClicked="#helpScrn" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/help.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

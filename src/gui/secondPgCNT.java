@@ -32,7 +32,7 @@ public class secondPgCNT implements Initializable
 
     @FXML
     private TextArea multiLTLPlace;
-
+    
 
     @FXML
     private ImageView backToFirstPageBTN;
@@ -46,7 +46,14 @@ public class secondPgCNT implements Initializable
     public static Algo algorithm;
     public static boolean result;
     public static boolean finish = false;
-
+    @FXML
+    private ImageView helpBTN;
+    @FXML
+    void helpScrn(MouseEvent event) {
+    	firstPgCNT.lastScreen=SCREENS.secondp;
+    	thisNode = ((Node) event.getSource());
+    	GuiManager.SwitchScene(SCREENS.help,(Stage)thisNode.getScene().getWindow());
+    }
     @FXML
     void backToFirstPage(MouseEvent event) {
     	thisNode = ((Node) event.getSource());

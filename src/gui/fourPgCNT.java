@@ -40,6 +40,14 @@ public class fourPgCNT  implements Initializable {
     private Node thisNode;
     private pdfMaker pdmkr;
     @FXML
+    private ImageView helpBTN;
+    @FXML
+    void helpScrn(MouseEvent event) {
+    	firstPgCNT.lastScreen=SCREENS.fourthp;
+    	thisNode = ((Node) event.getSource());
+    	GuiManager.SwitchScene(SCREENS.help,(Stage)thisNode.getScene().getWindow());
+    }
+    @FXML
     void ExportToPDF(MouseEvent event)
     {
 		String dateName;
@@ -61,6 +69,7 @@ public class fourPgCNT  implements Initializable {
 
     @FXML
     void backToFirstPage(MouseEvent event) {
+    	
     	thisNode = ((Node) event.getSource());
     	GuiManager.SwitchScene(SCREENS.firstp,(Stage)thisNode.getScene().getWindow()); 
     }

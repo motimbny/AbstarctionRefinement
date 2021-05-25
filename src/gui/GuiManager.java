@@ -24,6 +24,7 @@ public class GuiManager
 			put(SCREENS.secondp,"/gui/secondPage.fxml");
 			put(SCREENS.thirdp,"/gui/thirdPage.fxml");
 			put(SCREENS.fourthp,"/gui/fourthPage.fxml");
+			put(SCREENS.help,"/gui/helpPage.fxml");
 		}
 	};
 	

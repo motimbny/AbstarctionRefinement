@@ -16,10 +16,7 @@ import java.util.ResourceBundle;
 
 public class thirdPgCNT implements Initializable, Runnable
 {	
-	public thirdPgCNT()
-	{
-		
-	}
+
     @FXML
     private Button resBTN;
 
@@ -37,6 +34,14 @@ public class thirdPgCNT implements Initializable, Runnable
     public static  double totalTime;
     public static String resultMP;
     public static Object lock=new Object();
+    @FXML
+    private ImageView helpBTN;
+    @FXML
+    void helpScrn(MouseEvent event) {
+    	firstPgCNT.lastScreen=SCREENS.thirdp;
+    	thisNode = ((Node) event.getSource());
+    	GuiManager.SwitchScene(SCREENS.help,(Stage)thisNode.getScene().getWindow());
+    }
     @FXML
     void backToSecondPage(MouseEvent event) {
     	thisNode = ((Node) event.getSource());
