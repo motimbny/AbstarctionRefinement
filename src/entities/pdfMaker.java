@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -16,7 +18,7 @@ public class pdfMaker
 	{
 		this.path=path;
 	}
-	public void makePdf(String[] content)
+	public void makePdf(ArrayList<String> content)
 	{
 	    try 
 	    {

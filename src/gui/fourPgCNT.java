@@ -3,6 +3,7 @@ package gui;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -50,20 +51,30 @@ public class fourPgCNT  implements Initializable {
     @FXML
     void ExportToPDF(MouseEvent event)
     {
+    	String one="",two="",three="";
+		for(int i=0;i<secondPgCNT.multiModel.size();i++)
+		{
+			one+=secondPgCNT.multiModel.get(i).toString();
+			one+="\n";
+			two+=secondPgCNT.multiLTL.get(i).toString();
+			two+="\n";
+			three+=secondPgCNT.algorithm.getA().get(i).toString();
+			three+="\n";
+		}
 		String dateName;
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Date date = new Date();
 		dateName=dateFormat.format(date).toString();
 		dateName+="_Abstarction_results.pdf";
     	pdmkr=new pdfMaker(dateName);
-    	String[] content=new String[] {"","","","","","",""};
-    	content[0]="-------------Abstarction run results---------\n";
-    	content[1]="Time:"+thirdPgCNT.totalTime+" sec\n";
-    	content[2]="Result:"+thirdPgCNT.resultMP+"\n";
-    	content[3]="Date:"+dateFormat.format(date).toString()+"\n";
-    	content[4]="Input m:\n "+secondPgCNT.multiModel.get(0).toString()+"\n";
-    	content[5]="Input p:\n "+secondPgCNT.multiLTL.get(0).toString()+"\n";
-    	content[6]="Abstarction of m:\n "+secondPgCNT.algorithm.getA().get(0).toString()+"\n";
+    	ArrayList<String> content=new ArrayList<String>();
+    	content.add("-------------Abstarction run results---------\n");
+    	content.add("Time:"+thirdPgCNT.totalTime+" sec\n");
+    	content.add("Result:"+thirdPgCNT.resultMP+"\n");
+    	content.add("Date:"+dateFormat.format(date).toString()+"\n");
+    	content.add("Input m:\n "+one+"\n");
+    	content.add("Input p:\n "+two+"\n");
+    	content.add("Abstarction of m:\n "+three+"\n");
     	pdmkr.makePdf(content);
     }
 
@@ -76,9 +87,19 @@ public class fourPgCNT  implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		mView.setText(secondPgCNT.multiModel.get(0).toString());
-		pview.setText(secondPgCNT.multiLTL.get(0).toString());
-		aview.setText(secondPgCNT.algorithm.getA().get(0).toString());
+		String one="",two="",three="";
+		for(int i=0;i<secondPgCNT.multiModel.size();i++)
+		{
+			one+=secondPgCNT.multiModel.get(i).toString();
+			one+="\n";
+			two+=secondPgCNT.multiLTL.get(i).toString();
+			two+="\n";
+			three+=secondPgCNT.algorithm.getA().get(i).toString();
+			three+="\n";
+		}
+		mView.setText(one);
+		pview.setText(two);
+		aview.setText(three);
 		timeTEXT.setText(""+thirdPgCNT.totalTime+" sec");
 		resTEXT.setText(thirdPgCNT.resultMP);
 	}

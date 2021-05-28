@@ -86,9 +86,15 @@ public class secondPgCNT implements Initializable
 			e.printStackTrace();
 		}
 		algorithm = new Algo(multiModel, multiLTL);
-		System.out.println(multiModel.get(0).toString());
-		System.out.println(multiLTL.get(0).toString());
-		multiModelPlace.setText(multiModel.get(0).toString());
-		multiLTLPlace.setText(multiLTL.get(0).toString());
+		String one="",two="";
+		for(int i=0;i<multiModel.size();i++)
+		{
+			one+=multiModel.get(i).toString();
+			one+="\n";
+			two+=multiLTL.get(i).toString();
+			two+="\n";
+		}
+		multiModelPlace.setText(one);
+		multiLTLPlace.setText(two);
 	}
 }
