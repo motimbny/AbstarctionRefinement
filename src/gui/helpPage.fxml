@@ -14,23 +14,23 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Button fx:id="continureBTN" layoutX="14.0" layoutY="341.0" mnemonicParsing="false" onMouseClicked="#continuePage" prefHeight="37.0" prefWidth="105.0" stylesheets="@style.css" text="Back" />
-      <ImageView fx:id="help1" fitHeight="289.0" fitWidth="284.0" layoutX="208.0" layoutY="69.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <Button fx:id="continureBTN" layoutX="11.0" layoutY="345.0" mnemonicParsing="false" onMouseClicked="#continuePage" prefHeight="37.0" prefWidth="63.0" stylesheets="@style.css" text="Back" />
+      <ImageView fx:id="help1" fitHeight="302.0" fitWidth="499.0" layoutX="63.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/help1.jpg" />
          </image>
       </ImageView>
-      <ImageView fx:id="help2" fitHeight="150.0" fitWidth="200.0" layoutX="253.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="help2" fitHeight="289.0" fitWidth="527.0" layoutX="44.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/help2.jpg" />
          </image>
       </ImageView>
-      <ImageView fx:id="help3" fitHeight="150.0" fitWidth="200.0" layoutX="224.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="help3" fitHeight="281.0" fitWidth="559.0" layoutX="24.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/help3.jpg" />
          </image>
       </ImageView>
-      <ImageView fx:id="help4" fitHeight="150.0" fitWidth="200.0" layoutX="235.0" layoutY="91.0" pickOnBounds="true" preserveRatio="true" visible="false">
+      <ImageView fx:id="help4" fitHeight="274.0" fitWidth="525.0" layoutX="37.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/help4.jpg" />
          </image>
