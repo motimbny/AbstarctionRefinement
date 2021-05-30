@@ -18,6 +18,10 @@ public class pdfMaker
 	{
 		this.path=path;
 	}
+	/**
+	 * this function is used in order to create a new pdf file
+	 * @param content 
+	 */
 	public void makePdf(ArrayList<String> content)
 	{
 	    try 
@@ -38,6 +42,10 @@ public class pdfMaker
 		e.printStackTrace();
 	    }
 	  }
+	/**
+	 * This function is used in order to open a pdf file 
+	 * @param file
+	 */
 	public void openPDF(File file)
 	{
 		if(!Desktop.isDesktopSupported())

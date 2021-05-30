@@ -16,6 +16,11 @@ import javafx.stage.Stage;
 
 public class GuiManager 
 {
+	/**
+	 * This section is to create a map and provide the path to 
+	 * load fxml page from fxlm dir. if you want to add new page, you need to add
+	 * the path here.
+	 */
 	@SuppressWarnings("serial")
 	public static Map<SCREENS, String> availableFXML = new HashMap<SCREENS, String>()
 	{
@@ -27,7 +32,12 @@ public class GuiManager
 			put(SCREENS.help,"/gui/helpPage.fxml");
 		}
 	};
-	
+	/**
+	 * this function is called in order to switch scene.
+	 * @param screenEnum
+	 * @param SeondStage
+	 * result is that scene is switched and GUI shows the new page
+	 */
 	public static void SwitchScene(SCREENS screenEnum, Stage SeondStage)
 	{
 		try
@@ -53,7 +63,11 @@ public class GuiManager
 		primaryStage.setOnCloseRequest(evt -> Platform.exit());
 		primaryStage.show();
 	}
-    
+    /**
+     * this function create a pop up message
+     * we use this function when error message is need to be shown.
+     * @param msg
+     */
 	public static void ShowMessagePopup(String msg)
 	{
 		Platform.runLater(() -> {

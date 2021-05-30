@@ -45,12 +45,23 @@ public class firstPgCNT {
     private Node thisNode;
     public static textFile MMfile;
     public static textFile MLfile;
+    /**
+     * This function is called when mouse clicks on help button.
+     * it will switch the screen to help screen and save current calling screen.
+     * @param MouseEvent
+     */
     @FXML
     void helpScrn(MouseEvent event) {
     	lastScreen=SCREENS.firstp;
     	thisNode = ((Node) event.getSource());
     	GuiManager.SwitchScene(SCREENS.help,(Stage)thisNode.getScene().getWindow());
     }
+    /**
+     * This function is called when user clicks on continue button
+     * after providing both files of multimodel and multiLTL.
+     * this function also checks that both files are provided.
+     * @param event
+     */
     @FXML
     void continuePage(MouseEvent event) 
     {
@@ -69,6 +80,11 @@ public class firstPgCNT {
                 a.show();
     	  }
     }
+    /**
+     * This function is called when user clicks on add file button
+     * it open the file explorer and save the path to the multimodel file.
+     * @param event
+     */
     @FXML
     void openMultiModelChose(MouseEvent event) 
     {
@@ -88,7 +104,11 @@ public class firstPgCNT {
         }
         multiModelInput.setText(fileName);
     }
-
+    /**
+     * This function is called when user clicks on add file button
+     * it open the file explorer and save the path to the multiLTL file.
+     * @param event
+     */
     @FXML
     void openMultiltlChose(MouseEvent event) 
     {

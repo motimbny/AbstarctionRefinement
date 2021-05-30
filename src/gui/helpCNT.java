@@ -30,7 +30,11 @@ public class helpCNT  implements Initializable
     @FXML
     private ImageView help4;
     private Node thisNode;
-
+    /**
+     * This function is used when user presses back button
+     * it will switch back to previous scene
+     * @param event
+     */
     @FXML
     void continuePage(MouseEvent event) 
     {

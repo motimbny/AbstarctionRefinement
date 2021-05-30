@@ -48,18 +48,34 @@ public class secondPgCNT implements Initializable
     public static boolean finish = false;
     @FXML
     private ImageView helpBTN;
+    /**
+     * This function is called when mouse clicks on help button.
+     * it will switch the screen to help screen and save current calling screen.
+     * @param event
+     */
     @FXML
     void helpScrn(MouseEvent event) {
     	firstPgCNT.lastScreen=SCREENS.secondp;
     	thisNode = ((Node) event.getSource());
     	GuiManager.SwitchScene(SCREENS.help,(Stage)thisNode.getScene().getWindow());
     }
+    /**
+     * This function is called when user pressed on back button
+     * this will bring the user back to first page.
+     * @param event
+     */
     @FXML
     void backToFirstPage(MouseEvent event) {
     	thisNode = ((Node) event.getSource());
     	GuiManager.SwitchScene(SCREENS.firstp,(Stage)thisNode.getScene().getWindow()); 
     }
-
+    /**
+     * This function will start the algorithm
+     * it will create new Algo object using the multimodel and multiltl
+     * provided from first page. 
+     * we use a new thread in order to start some process together.
+     * @param event
+     */
     @FXML
     void runTheAlgo(MouseEvent event) 
     {

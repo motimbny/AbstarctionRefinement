@@ -42,12 +42,23 @@ public class fourPgCNT  implements Initializable {
     private pdfMaker pdmkr;
     @FXML
     private ImageView helpBTN;
+    /**
+     * This function is called when mouse clicks on help button.
+     * it will switch the screen to help screen and save current calling screen.
+     * @param event
+     */
     @FXML
     void helpScrn(MouseEvent event) {
     	firstPgCNT.lastScreen=SCREENS.fourthp;
     	thisNode = ((Node) event.getSource());
     	GuiManager.SwitchScene(SCREENS.help,(Stage)thisNode.getScene().getWindow());
     }
+    /**
+     * This function is called when user clicks on Export to pdf button.
+     * this function will create a new pdf file with all the data from the last run.
+     * this function uses pdfMaker class
+     * @param event
+     */
     @FXML
     void ExportToPDF(MouseEvent event)
     {
@@ -77,7 +88,11 @@ public class fourPgCNT  implements Initializable {
     	content.add("Abstarction of m:\n "+three+"\n");
     	pdmkr.makePdf(content);
     }
-
+    /**
+     * This function is called when user pressed on back button
+     * this will bring the user back to first page.
+     * @param event
+     */
     @FXML
     void backToFirstPage(MouseEvent event) {
     	

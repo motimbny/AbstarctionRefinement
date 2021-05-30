@@ -12,6 +12,11 @@ public class textFile
     	myfile=new File(file);
     	path = file;
     }
+    /**
+     * this function will return a string object
+     * from the file provided to constructor.
+     * @return String of total file content
+     */
     public String fileToString()
     {
     	String data = "";
