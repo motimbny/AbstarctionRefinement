@@ -224,36 +224,4 @@ public class KripkeSt
 		return previousStates;
 	}
 
-	public static void main(String[]args)
-	{
-		State q1s = new State("q1"); 
-		State q2s = new State("q2"); 
-		State q3s = new State("q3"); 
-		q3s.setAccept(true);
-		ComplexState q1 = new ComplexState("q1");
-		ComplexState q2 = new ComplexState("q2");
-		ComplexState q3 = new ComplexState("q3");
-		q1.addContainingStates(q1s);
-		q2.addContainingStates(q2s);
-		q3.addContainingStates(q3s);
-		ArrayList<ComplexState> states = new ArrayList<ComplexState> ();
-		states.add(q1);
-		states.add(q2);
-		states.add(q3);
-		ArrayList<ComplexState> initialStates = new ArrayList<ComplexState>();
-		initialStates.add(q1);
-		HashMap<ComplexState, ArrayList<ComplexState>> transitionRelation = new HashMap<ComplexState, ArrayList<ComplexState>>();
-		AtomicProp a = new AtomicProp("a");
-		AtomicProp b = new AtomicProp("b");
-		q1.addLabel(a);
-		q1.addLabel(b);
-		q2.addLabel(a);
-		q3.addLabel(b);
-		KripkeSt kripke = new KripkeSt(states, initialStates, transitionRelation, kripkeType.Regular);
-		kripke.addTransitionRelation(q1, q2);
-		kripke.addTransitionRelation(q1, q3);	
-		System.out.println(kripke.toString());
-		Automata automata = kripke.convertToAutomata(q1);
-		System.out.println("\n" + automata.toString());
-	}
 }

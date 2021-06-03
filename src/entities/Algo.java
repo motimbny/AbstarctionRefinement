@@ -96,10 +96,8 @@ private ArrayList<KripkeSt> b;
 			counterExamples.add(null);
 			continue;  
 		  }
-		  Automata ai = a.get(i).convertToAutomata(a.get(i).getInitialStates().get(0));
-		  System.out.println("\nautomat ai:\n"+ai.toString());		   
+		  Automata ai = a.get(i).convertToAutomata(a.get(i).getInitialStates().get(0));	   
 		  Automata mi = m.get(i).convertToAutomata(m.get(i).getInitialStates().get(0));
-		  System.out.println("\nautomat mi:\n"+mi.toString()); 
 		  ai = ai.convertToDeterministic();
 		  mi = mi.convertToDeterministic();
 		  if(a.get(i).getType() == kripkeType.Over)
@@ -469,128 +467,11 @@ private ArrayList<KripkeSt> b;
 		  }
 	  }
   }
-  
-  public static void main(String[]args) throws CloneNotSupportedException 
-  {
-/*		State q1s = new State("q1"); 
-		State q2s = new State("q2"); 
-		State q3s = new State("q3"); 
-		State q4s = new State("q4"); 
-		ComplexState q1 = new ComplexState("q1");
-		ComplexState q2 = new ComplexState("q2");
-		ComplexState q3 = new ComplexState("q3");
-		ComplexState q4 = new ComplexState("q4");
-		q1.addContainingStates(q1s);
-		q2.addContainingStates(q2s);
-		q3.addContainingStates(q3s);
-		q4.addContainingStates(q4s);
-		ArrayList<ComplexState> states = new ArrayList<ComplexState> ();
-		states.add(q1);
-		states.add(q2);
-		states.add(q3);
-		states.add(q4);
-		AtomicProp a = new AtomicProp("a");
-		AtomicProp b = new AtomicProp("b");
-		q1.addLabel(a);
-		q1.addLabel(b);
-		q2.addLabel(a);
-		q3.addLabel(a);
-		q3.addLabel(b);
-		q4.addLabel(b);
-		ArrayList<ComplexState> result = null;
-		try {
-			result = combineStates(states);
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}*/
-	    State q0s = new State("q0"); 
-		State q1s = new State("q1"); 
-		State q2s = new State("q2"); 
-		State q3s = new State("q3"); 
-		State q4s = new State("q4");
-		State q5s = new State("q5"); 
-		State q6s = new State("q6"); 
-		State q7s = new State("q7"); 
-		State q8s = new State("q8"); 
-		q0s.setAccept(true);
-		q1s.setAccept(true);
-		q2s.setAccept(true);
-		q3s.setAccept(true);
-		q4s.setAccept(true);
-		q5s.setAccept(true);
-		q6s.setAccept(true);
-		q7s.setAccept(true);
-		q8s.setAccept(true);
-		ComplexState q0 = new ComplexState("q0");
-		ComplexState q1 = new ComplexState("q1");
-		ComplexState q2 = new ComplexState("q2");
-		ComplexState q3 = new ComplexState("q3");
-		ComplexState q4 = new ComplexState("q4");
-		ComplexState q5 = new ComplexState("q5");
-		ComplexState q6 = new ComplexState("q6");
-		ComplexState q7 = new ComplexState("q7");
-		ComplexState q8 = new ComplexState("q8");
-		q0.addContainingStates(q0s);
-		q1.addContainingStates(q1s);
-		q2.addContainingStates(q2s);
-		q3.addContainingStates(q3s);
-		q4.addContainingStates(q4s);	
-		q5.addContainingStates(q5s);
-		q6.addContainingStates(q6s);
-		q7.addContainingStates(q7s);
-		q8.addContainingStates(q8s);
-		ArrayList<ComplexState> states = new ArrayList<ComplexState> ();
-		states.add(q0);
-		states.add(q1);
-		states.add(q2);
-		states.add(q3);
-		states.add(q4);
-		states.add(q5);
-		states.add(q6);
-		states.add(q7);
-		states.add(q8);
-		ArrayList<ComplexState> initialStates = new ArrayList<ComplexState>();
-		initialStates.add(q0);
-		HashMap<ComplexState, ArrayList<ComplexState>> transitionRelation = new HashMap<ComplexState, ArrayList<ComplexState>>();
-		AtomicProp a = new AtomicProp("a");
-		AtomicProp b = new AtomicProp("b");
-		AtomicProp c = new AtomicProp("c");
-		AtomicProp d = new AtomicProp("d");
-		q0.addLabel(a);
-		q1.addLabel(a);
-		q2.addLabel(b);
-		q3.addLabel(b);
-		q4.addLabel(b);
-		q5.addLabel(c);
-		q6.addLabel(c);
-		q7.addLabel(d);
-		q8.addLabel(d);		
-		KripkeSt kripke = new KripkeSt(states, initialStates, transitionRelation, kripkeType.Regular);
-		kripke.addTransitionRelation(q0, q3);
-		kripke.addTransitionRelation(q1, q4);
-		kripke.addTransitionRelation(q2, q5);
-		kripke.addTransitionRelation(q3, q5);
-		kripke.addTransitionRelation(q4, q6);
-		kripke.addTransitionRelation(q5, q8);		
-//		kripke.addTransitionRelation(q6, q8);
-		System.out.println("\nregular kripke\n" + kripke.toString());
-		
-		ArrayList<KripkeSt> mList = new ArrayList<KripkeSt>();
-		mList.add(kripke);		
-		ArrayList<Quantifier> p = new ArrayList<Quantifier>();
-		p.add(Quantifier.forEach);
-		Algo alg = new Algo(mList, p);
-		alg.runAbstraction();		
-		
-		//Parser par = new Parser("C:\\Users\\Adi Alaluf\\git\\AbstarctionRefinement");
-	//	par.parseNFA(underApproximation(kripke).convertToAutomata(new ComplexState("q0q1")));
-  }
 
 	@Override
 	public void run() 
 	{
 		secondPgCNT.result = runAbstraction();
-		System.out.println("i finished and result "+secondPgCNT.result +"\nthread name algo: " + Thread.currentThread().getName());
 		synchronized (thirdPgCNT.lock) {
 			thirdPgCNT.lock.notifyAll();
     	    secondPgCNT.endTime = System.nanoTime(); 

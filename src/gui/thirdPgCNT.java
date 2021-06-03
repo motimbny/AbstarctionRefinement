@@ -74,31 +74,23 @@ public class thirdPgCNT implements Initializable, Runnable
      */
     public void update()
     {
-    	//System.out.println("thirdpage update wait\nthread name1: "+Thread.currentThread().getName());
     	if(secondPgCNT.endTime==-1)
     	{
 	    	synchronized (lock)
 	    	{
 	    		try {
 					lock.wait();
-			    	//System.out.println("thirdpage update after wait \nthread name2: "+Thread.currentThread().getName());
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	    	}
     	}
 			totalTime=(double)(secondPgCNT.endTime-secondPgCNT.startTime)/ 1_000_000_000;
-			//System.out.println("total time is : "+totalTime); 
     	    resultMP= (secondPgCNT.result) ? "M |= P": "M |/= P";
-	    	//System.out.println("resultmp : "+resultMP);
-	    	//System.out.println("im stuck here 1");
-	    	//System.out.println("im stuck here 2\nthread name3: "+Thread.currentThread().getName());
 	    	Platform.runLater(new Runnable() {
 	    	      @Override public void run() {
 	    	    	  loadIcon.setVisible(false);
 	    	    	  resShow.setText(resultMP);
-	    	    	 // System.out.println("total time is : "+totalTime); 
 	    	    	  timeArea.setText(""+totalTime+" sec");	    	      }
 	    	});
 	    	Thread.currentThread().interrupt();

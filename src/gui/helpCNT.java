@@ -2,8 +2,6 @@ package gui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import enums.SCREENS;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -59,6 +57,8 @@ public class helpCNT  implements Initializable
 			case fourthp:
 				help4.setVisible(true);
 				break;
+		default:
+			break;
 				
 		}
 	}

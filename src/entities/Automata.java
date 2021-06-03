@@ -56,11 +56,6 @@ public class Automata
 		this.transitionFunction = transitionFunction;
 	}
 	
-/*	public void addTransitionRelation(State currentState, ArrayList<AtomicProp> input, State destinationState)
-	{
-		Transition newTransition = new Transition(currentState, input, destinationState);
-		transitionFunction.add(newTransition);
-	}*/
 	public void addTransitionRelation(State currentState, AtomicProp input, State destinationState)
 	{
 		Transition trans = getTransition(transitionFunction, currentState, input);
@@ -175,11 +170,9 @@ public class Automata
         	if(parent.get(detenation) == null)
         		break;
             path.addFirst(detenation);
- //           System.out.print(detenation.getName() + " <- "); //for testing
             detenation = parent.get(detenation);
         }
         path.addFirst(detenation);
- //       System.out.println(detenation.getName());   //for testing
         return path;
     }
     
@@ -212,10 +205,7 @@ public class Automata
     		acceptStatesStr.deleteCharAt(acceptStatesStr.lastIndexOf(","));
     	acceptStatesStr.append("}\n");    	
     	StringBuilder transitionFuncStr = new StringBuilder("Transition function: { ");
-  /*  	for(Transition trans: transitionFunction)
-    		for(AtomicProp input: trans.getInput())
-    			transitionFuncStr.append("( " + trans.getCurrentState().getName() + ", " + input.getName() + " ) -> " + trans.getDestinationState().getName() + ",\n\t\t\t");
-   */	for(Transition trans: transitionFunction)
+    	for(Transition trans: transitionFunction)
 	   		for(State dest: trans.getDestinationStates())
 	   			transitionFuncStr.append("( " + trans.getCurrentState().getName() + ", " + trans.getInput().getName() + " ) -> " + dest.getName() + ",\n\t\t\t");
     	
@@ -278,9 +268,6 @@ public class Automata
     		}
     	}
     	Automata intersection = new Automata(startState, states, alphabet, acceptStates, transitionFunction);
-    	
-    	/*Add a step of reducing states that cannot be reached*/
-    	
     	return intersection;
     }
     
@@ -334,67 +321,6 @@ public class Automata
     		}
     	}
     	
-    	/*
-    	for(int i=0; i<states.size(); i++)
-	    	{
-    			state = states.get(i);
-	    		if(state.getContainedStates().isEmpty())
-	    		{
-	        		for( Transition trans: this.transitionFunction)
-	        		{
-	        			if(trans.getCurrentState().equals(state))
-	        			{
-	        				if(trans.getDestinationStates().size() > 1)
-	        				{
-	            	    		newState = new State(trans.getDestinationStates());
-	            	    		if(!states.contains(newState))
-	            	    			states.add(newState); 
-	            	    		ArrayList<State> newDest = new ArrayList<State>();
-	            	    		newDest.add(newState);
-	            	    		newTrans = new Transition(trans.getCurrentState(), trans.getInput(), newDest);
-	            	    		transitionFunction.add(newTrans);
-	        				}
-	        				else
-	        				{
-	        					if(!states.contains(trans.getDestinationStates().get(0)))
-	        						states.add(trans.getDestinationStates().get(0)); 
-	        					transitionFunction.add(trans);
-	        				}
-	        			}
-	        		}
-	    		}
-	    		else
-	    		{
-	    			for(AtomicProp input: alphabet)
-	    				
-	    			{
-	    	    		ArrayList<State> destStates = new ArrayList<State>();
-	    	    		for(State containedState: state.getContainedStates())
-	    	    		{
-	    	    			destStates = union(destStates, this.getDestinationStates(containedState, input));
-	    	    		}
-	    	    		if(!destStates.isEmpty())
-	    	    		{
-	    	    			if(destStates.size()>1)
-	    	    			{
-	    	    				newState = new State(destStates);
-		        	    		ArrayList<State> newDest = new ArrayList<State>();
-		        	    		newDest.add(newState);
-		        	    		if(!states.contains(newState))
-		        	    			states.add(newState); 
-		        	    		transitionFunction.add(new Transition(state, input, newDest));
-	    	    			}
-	    	    			else
-	    	    			{
-	    	    				if(!states.contains(destStates.get(0)))
-	    	    					states.add(destStates.get(0)); 
-	    	    				transitionFunction.add(new Transition(state, input, destStates));
-	    	    			}	
-	    	    		}
-	    			}
-	    		}
-	    	} 
-	    	*/
     	/* accepted state of DFA will be state which has accepted state as its component*/
     	this.acceptStates.forEach(acceptState -> {
     		states.forEach(s ->{
@@ -451,158 +377,4 @@ public class Automata
 			return pStates;
 	}
 
-	
-    /**
-     * for test getPath method
-     * @param args
-     */
-/*	public static void main(String[]args) 
-	{
-		State q0 = new State("q0"); 
-		State q1 = new State("q1"); 
-		State q2 = new State("q2"); 
-		State q3 = new State("q3"); 
-		State q4 = new State("q4"); 
-		State q5 = new State("q5"); 
-		State q6 = new State("q6"); 
-		q0.addNeighbour(q1);
-		q0.addNeighbour(q2);
-		q1.addNeighbour(q3);
-		q2.addNeighbour(q0);
-		q2.addNeighbour(q5);
-		q2.addNeighbour(q6);
-		q3.addNeighbour(q1);
-		q3.addNeighbour(q4);
-		q4.addNeighbour(q2);
-		q4.addNeighbour(q3);
-		q5.addNeighbour(q4);
-		q5.addNeighbour(q6);
-		q6.addNeighbour(q5);
-		ArrayList<State> states = new ArrayList<State>();
-		states.add(q0);
-		states.add(q1);
-		states.add(q2);
-		states.add(q3);
-		states.add(q4);
-		states.add(q5);
-		states.add(q6);
-		AtomicProp ap = new AtomicProp("a");
-		ArrayList<AtomicProp> p= new ArrayList<AtomicProp>();
-		p.add(ap);
-		ArrayList<AtomicProp> alphabet = new ArrayList<AtomicProp>();
-		alphabet.add(ap);
-		ArrayList<State> acceptStates = new ArrayList<State>();
-		acceptStates.add(q6);		
-		ArrayList<Transition> transitionFunction = new ArrayList<Transition>();
-		Automata automat = new Automata(q2, states, alphabet, acceptStates, transitionFunction);
-		automat.addTransitionRelation(q0, p, q1);
-		automat.addTransitionRelation(q0, p, q2);
-		automat.addTransitionRelation(q1, p, q3);
-		automat.addTransitionRelation(q2, p, q0);
-		automat.addTransitionRelation(q2, p, q5);
-		automat.addTransitionRelation(q2, p, q6);
-		automat.addTransitionRelation(q3, p, q1);
-		automat.addTransitionRelation(q3, p, q4);
-		automat.addTransitionRelation(q4, p, q2);
-		automat.addTransitionRelation(q4, p, q3);
-		automat.addTransitionRelation(q5, p, q4);
-		automat.addTransitionRelation(q5, p, q6);
-		automat.addTransitionRelation(q6, p, q5);
-		automat.getPath();
-		System.out.println("\n" + automat.toString());
-	}*/
-    
-/*    public static void main(String[]args) 
-	{
-		State q0 = new State("q0"); 
-		State q1 = new State("q1"); 
-		State q2 = new State("q2"); 
-		q0.addNeighbour(q1);
-		q0.addNeighbour(q2);
-		q2.addNeighbour(q2);
-		q1.addNeighbour(q1);
-		ArrayList<State> states = new ArrayList<State>();
-		states.add(q0);
-		states.add(q1);
-		states.add(q2);
-		AtomicProp ap = new AtomicProp("a");
-		AtomicProp ap2 = new AtomicProp("b");	
-		ArrayList<AtomicProp> p= new ArrayList<AtomicProp>();
-		p.add(ap);
-		p.add(ap2);
-		ArrayList<AtomicProp> p1= new ArrayList<AtomicProp>();
-		p1.add(ap);
-		ArrayList<AtomicProp> p2= new ArrayList<AtomicProp>();
-		p2.add(ap2);
-		ArrayList<AtomicProp> alphabet = new ArrayList<AtomicProp>();
-		alphabet.add(ap);
-		alphabet.add(ap2);
-		ArrayList<State> acceptStates = new ArrayList<State>();
-		acceptStates.add(q1);		
-		ArrayList<Transition> transitionFunction = new ArrayList<Transition>();
-		Automata automat = new Automata(q0, states, alphabet, acceptStates, transitionFunction);
-		automat.addTransitionRelation(q0, p1, q1);
-		automat.addTransitionRelation(q0, p2, q2);
-		automat.addTransitionRelation(q2, p, q2);
-		automat.addTransitionRelation(q1, p, q1);
-		System.out.println(automat.toString());
-		ArrayList<State> pstates = automat.getPowerset();
-		pstates.forEach(s -> System.out.println(s.getName()));
-		System.out.println();
-		
-		State p0 = new State("p0"); 
-		State p11 = new State("p1"); 
-		p0.addNeighbour(p11);
-		p11.addNeighbour(p0);
-		ArrayList<State> states2 = new ArrayList<State>();
-		states2.add(p0);
-		states2.add(p11);
-		ArrayList<AtomicProp> alphabet2 = new ArrayList<AtomicProp>();
-		alphabet2.add(ap);
-		alphabet2.add(ap2);
-		ArrayList<State> acceptStates2 = new ArrayList<State>();
-		acceptStates2.add(p11);		
-		ArrayList<Transition> transitionFunction2 = new ArrayList<Transition>();
-		Automata automat2 = new Automata(p0, states2, alphabet2, acceptStates2, transitionFunction2);
-		automat2.addTransitionRelation(p0, p, p11);
-		automat2.addTransitionRelation(p11, p, p0);
-		System.out.println(automat2.toString());
-		
-		System.out.println(automat.getIntersection(automat2).toString());
-	}*/
-	
-    public static void main(String[]args) 
-	{
-		State q0 = new State("q0"); 
-		State q1 = new State("q1"); 
-		State q2 = new State("q2"); 
-		q0.addNeighbour(q1);
-		q1.addNeighbour(q2);
-		q2.addNeighbour(q0);
-		q2.addNeighbour(q1);
-		ArrayList<State> states = new ArrayList<State>();
-		states.add(q0);
-		states.add(q1);
-		states.add(q2);
-		AtomicProp a = new AtomicProp("a");
-		AtomicProp b = new AtomicProp("b");	
-		ArrayList<AtomicProp> alphabet = new ArrayList<AtomicProp>();
-		alphabet.add(a);
-		alphabet.add(b);
-		ArrayList<State> acceptStates = new ArrayList<State>();
-		acceptStates.add(q1);		
-		ArrayList<Transition> transitionFunction = new ArrayList<Transition>();
-		Automata automat = new Automata(q0, states, alphabet, acceptStates, transitionFunction);
-		automat.addTransitionRelation(q0, a, q1);
-		automat.addTransitionRelation(q1, a, q1);
-		automat.addTransitionRelation(q1, a, q2);
-		automat.addTransitionRelation(q2, a, q0);
-		automat.addTransitionRelation(q2, a, q2);
-		automat.addTransitionRelation(q2, b, q1);
-		System.out.println(automat.toString());
-		System.out.println();
-		Automata dfa = automat.convertToDeterministic();
-		System.out.println(automat.toString());
-		System.out.println(dfa.toString());
-	}
 }
