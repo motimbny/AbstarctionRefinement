@@ -87,9 +87,9 @@ public class KripkeSt
 	public void removeTransitionRelation(ComplexState src, ComplexState dest)
 	{
 		ArrayList<ComplexState> transitions = transitionRelation.get(src);
-		for(ComplexState state: transitions)
-			if(state.equals(dest))
-				transitions.remove(state);
+		for(int i=0; i<transitions.size(); i++)
+			if(transitions.get(i).equals(dest))
+				transitions.remove(transitions.get(i));
 	}
 	
 	/**
