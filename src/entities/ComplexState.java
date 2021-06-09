@@ -104,7 +104,7 @@ public class ComplexState implements Cloneable
      {
          final int prime = 31;
          int result = 1;
-         result = prime * result + name.hashCode();  
+         result = /*prime * result +*/ name.hashCode();  
          return result;
      }
      
@@ -141,6 +141,16 @@ public class ComplexState implements Cloneable
     		 throw new RuntimeException(e);
     	 }
     	 return clone;
+     }
+     
+     public boolean isContainInitialStates(ArrayList<ComplexState> initStates)
+     {
+    	 for(int i=0; i<this.containingStates.size(); i++)
+    	 {
+    		 if(initStates.contains(this.containingStates.get(i).convertToComplexState()))
+    			 return true;
+    	 }
+		 return false;
      }
 
 }

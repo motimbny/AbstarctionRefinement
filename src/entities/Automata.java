@@ -76,6 +76,34 @@ public class Automata
 			}
 		return destinationStates;
 	}
+	
+	/**
+	 * This function receives src state and input, 
+	 * searches for all states that can be reached from any of the states contained in src state given the input, 
+	 * and returns the list of destination states.
+	 * @param src
+	 * @param input
+	 * @return list of destination states
+	 */
+	public ArrayList<State> getUnionDestinationStates(State src, AtomicProp input)
+	{
+		ArrayList<State> destinationStates = new ArrayList<State>();
+		State srcContained;
+		for(int i=0; i<src.getContainedStates().size(); i++)
+		{
+			srcContained = src.getContainedStates().get(i);
+			for(Transition trans: transitionFunction)
+				if(trans.getCurrentState().equals(srcContained) && trans.getInput().equals(input))
+				{
+					for(State dest: trans.getDestinationStates())
+						if(!destinationStates.contains(dest))
+							destinationStates.add(dest);
+					break;
+				}			
+		}
+		return destinationStates;		
+	}
+	
 
 	public Automata getComplementAutomata()
 	{
@@ -294,9 +322,11 @@ public class Automata
     	for(int i=0; i<states.size(); i++)
     	{
     		state = states.get(i);
+    		if(state.getContainedStates().isEmpty())
+    			state.getContainedStates().add(state);
     		for(AtomicProp input: alphabet)
     		{
-    			ArrayList<State> destinationStates = this.getDestinationStates(state, input);
+    			ArrayList<State> destinationStates = this.getUnionDestinationStates(state, input);
     			if(destinationStates.size() ==1)
     			{
     				Transition newTrans = new Transition(state, input, destinationStates.get(0));

@@ -84,9 +84,19 @@ public class KripkeSt
 		}
 	}
 	
+	public ArrayList<ComplexState> getDestinations(ComplexState src)
+	{
+		for (Map.Entry<ComplexState, ArrayList<ComplexState>> entry : this.transitionRelation.entrySet()) 
+		{
+		    if(entry.getKey().equals(src))
+		    	return entry.getValue();
+		}
+		return null;
+	}
+	
 	public void removeTransitionRelation(ComplexState src, ComplexState dest)
 	{
-		ArrayList<ComplexState> transitions = transitionRelation.get(src);
+		ArrayList<ComplexState> transitions = getDestinations(src);
 		for(int i=0; i<transitions.size(); i++)
 			if(transitions.get(i).equals(dest))
 				transitions.remove(transitions.get(i));

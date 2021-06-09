@@ -5,7 +5,9 @@ import gui.secondPgCNT;
 import gui.thirdPgCNT;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
@@ -27,15 +29,15 @@ private ArrayList<KripkeSt> b;
   
   public boolean runAbstraction()
   {	  
-	  boolean resa,resb;
-	  ArrayList<WordRun> counterExampleA;
-	  ArrayList<WordRun> counterExampleB;
+	  boolean resa,resb, isFirstIteration = true;;
+	  ArrayList<WordRun> counterExampleA = new ArrayList<WordRun>();
+	  ArrayList<WordRun> counterExampleB = new ArrayList<WordRun>();
 	  MMC mmc=new MMC();
 	  initialize();
 	  while(true)
 	  {
 		  resa=mmc.runMMCF(a, p);
-		  if(resa || checkKripkeSize(a))  // we use checkKripkeSize() because we don't have a real MMC result  
+		  if(resa || (!checkIfCexExist(counterExampleA) && !isFirstIteration))  // we use checkKripkeSize() because we don't have a real MMC result  
 			  return true;
 		  else
 		  {
@@ -43,22 +45,23 @@ private ArrayList<KripkeSt> b;
 			  refine(counterExampleA,a, m);
 		  }
 		  resb=mmc.runMMCF(b, p);
-		  if(resb|| checkKripkeSize(b)) //we use checkKripkeSize() because we don't have a real MMC result  
+		  if(resb || (!checkIfCexExist(counterExampleB) && !isFirstIteration)) //we use checkKripkeSize() because we don't have a real MMC result  
 			  return false;
 		  else
 		  {
 			  counterExampleB=getCEX(b,m);
 			  refine(counterExampleB,b, m);
 		  }
+		  isFirstIteration = false;
 	  }
   }
   
-  private Boolean checkKripkeSize(ArrayList<KripkeSt> abstractionList)
+  private Boolean checkIfCexExist(ArrayList<WordRun> counterExamples)
   {
-	for(int i=0; i<m.size(); i++)
-		if(m.get(i).getStates().size() != abstractionList.get(i).getStates().size())
-			return false;
-	return true;
+	  for(WordRun cex: counterExamples)
+		  if(cex != null)
+			  return true;
+	  return false;
   }
   
   public ArrayList<KripkeSt> getA() {
@@ -106,15 +109,23 @@ private ArrayList<KripkeSt> b;
 			  intersrctionAutomata = ai.getIntersection(mi);
 			  bFSpath = intersrctionAutomata.getPath();
 			  if(!bFSpath.isEmpty())
-				  wi = new WordRun(findMaxList(bFSpath), kripkeType.Over);
+			  {
+				  LinkedList<State> acceptedWord = findAcceptedWord(bFSpath);
+				  if(acceptedWord != null)
+					  wi = new WordRun(acceptedWord, kripkeType.Over);	
+			  }  
 		  }
 		  else
 		  {
 			  mi = mi.getComplementAutomata();
 			  intersrctionAutomata = mi.getIntersection(ai);
 			  bFSpath = intersrctionAutomata.getPath();
-			  if(!bFSpath.isEmpty())
-				  wi = new WordRun(findMaxList(bFSpath), kripkeType.Under);	  
+			  if(!bFSpath.isEmpty())	
+			  {
+				  LinkedList<State> acceptedWord = findAcceptedWord(bFSpath);
+				  if(acceptedWord != null)
+					  wi = new WordRun(acceptedWord, kripkeType.Under);	
+			  }  
 		  }
 		  counterExamples.add(wi);
 		  wi = null;
@@ -122,15 +133,20 @@ private ArrayList<KripkeSt> b;
 	return counterExamples;
   }
   
-  private static LinkedList<State> findMaxList(ArrayList<LinkedList<State>> lists)
+  
+  private static LinkedList<State> findAcceptedWord(ArrayList<LinkedList<State>> lists)
   {
-	  LinkedList<State> max = null;
-	  for(LinkedList<State> list: lists)
+	  LinkedList<State> acceptedWord = null;
+	  for(int i=0; i<lists.size(); i++)
 	  {
-		  if( max == null || list.size()>max.size())
-			  max = list;
+		  LinkedList<State> list = lists.get(i);
+		  if(list.getLast().isAccept())
+		  {
+			  acceptedWord = list;
+			  break;  
+		  }
 	  }
-	return max;
+	  return acceptedWord;
   }
   
   private static void refine(ArrayList<WordRun> counterExamples, ArrayList<KripkeSt> a,  ArrayList<KripkeSt> m)
@@ -151,7 +167,7 @@ private ArrayList<KripkeSt> b;
   
   private static KripkeSt split(KripkeSt a, ComplexState stateToSplit, ComplexState followState, ComplexState prevState, KripkeSt m)
   {
-	  Boolean isConnect = false;
+	  Boolean isConnect = false, isInitial = false;
 	  ArrayList<ComplexState> previousStates;
 	  ComplexState newComplexState = new ComplexState("");
 	  if(stateToSplit.equals(followState))
@@ -176,16 +192,28 @@ private ArrayList<KripkeSt> b;
 				  newComplexState.addContainingStates(state);
 				  newComplexState.setName(newComplexState.getName()+state.getName());
 				  newComplexState.setLabels(stateToSplit.getLabels());
+				  if(m.getInitialStates().contains(state.convertToComplexState()))
+					  isInitial = true;
 				  stateToSplit.getContainingStates().remove(state);
 				  stateToSplit.setName(stateToSplit.getName().replace(state.getName(), ""));
 			  }
 		  }
 		  a.getStates().add(newComplexState);
+		  if(isInitial)    //update the initial states of the Kripke
+		  {
+			  a.getInitialStates().add(newComplexState);
+			  if(!stateToSplit.isContainInitialStates(m.getInitialStates()))
+				  a.getInitialStates().remove(stateToSplit);
+		  }
 		  previousStates = a.getPreviousStates(stateToSplit);
-		  for(ComplexState state: previousStates)
-			  a.addTransitionRelation(state, newComplexState);
-		  if(prevState != null)
-			  a.removeTransitionRelation(prevState, stateToSplit);
+		  connectInboundEdgesOver(previousStates, a, stateToSplit, m);
+		  connectInboundEdgesOver(previousStates, a, newComplexState, m);
+		  try {
+			  connectOutboundEdgesOver(a, stateToSplit, m);
+			connectOutboundEdgesOver(a, newComplexState, m);
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 	  }
 	  else //under
 	  {
@@ -201,6 +229,8 @@ private ArrayList<KripkeSt> b;
 						  newComplexState.addContainingStates(state);
 						  newComplexState.setName(newComplexState.getName()+state.getName());
 						  newComplexState.setLabels(stateToSplit.getLabels());
+						  if(m.getInitialStates().contains(state.convertToComplexState()))
+							  isInitial = true;
 						  stateToSplit.getContainingStates().remove(state);
 						  stateToSplit.setName(stateToSplit.getName().replace(state.getName(), ""));
 						  break;  
@@ -209,16 +239,71 @@ private ArrayList<KripkeSt> b;
 			  }
 		  }
 		  a.getStates().add(newComplexState);
+		  if(isInitial)    //update the initial states of the Kripke
+		  {
+			  a.getInitialStates().add(newComplexState);
+			  if(!stateToSplit.isContainInitialStates(m.getInitialStates()))
+				  a.getInitialStates().remove(stateToSplit);
+		  }
 		  a.addTransitionRelation(newComplexState, followState);
+		  try {
+			connectOutboundEdgesUnder(a, stateToSplit, m);
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
 		  previousStates = a.getPreviousStates(stateToSplit);
-		  connectInboundEdgesUnder(previousStates, a, stateToSplit);
-		  previousStates = a.getPreviousStates(newComplexState);
-		  connectInboundEdgesUnder(previousStates, a, newComplexState);
+		  connectInboundEdgesUnder(previousStates, a, stateToSplit, m);
+	//	  previousStates = a.getPreviousStates(newComplexState);
+		  connectInboundEdgesUnder(previousStates, a, newComplexState, m);
 	 }
 	return a;
   }
   
-  private static void connectInboundEdgesUnder(ArrayList<ComplexState> previousStates, KripkeSt a, ComplexState state)
+  private static void connectOutboundEdgesUnder(KripkeSt a, ComplexState state, KripkeSt m) throws CloneNotSupportedException
+  {
+	  ArrayList<ComplexState> destinationStates;
+	  KripkeSt copyOfkripke = m.getClone();
+	  boolean isConnect = false;
+	  for(ComplexState complexStateDest: a.getStates())
+	  {
+		  for(State stateInSrc: state.getContainingStates())
+		  {
+			  isConnect = false;
+			  ComplexState temp = new ComplexState(stateInSrc.getName());
+			  destinationStates = copyOfkripke.getRk().get(temp); //list of all states that stateInSrc connect to
+			  if(destinationStates != null)
+			  {
+				  for(ComplexState stateInDest: destinationStates)
+				  {
+					  
+					  if(complexStateDest.getContainingStates().contains(stateInDest.convertToState()))
+					  {
+						  isConnect = true;
+						  break;
+					  }
+				  }
+			  }
+			  if(!isConnect)
+				  break;
+		  }
+		  if(isConnect)
+		  {
+			  if(a.getRk().containsKey(state))
+			  {
+				  if(!a.getRk().get(state).contains(complexStateDest))
+					  a.getRk().get(state).add(complexStateDest);
+			  }
+			  else
+			  {
+				  ArrayList<ComplexState> destStates = new ArrayList<ComplexState>();
+				  destStates.add(complexStateDest);
+				  a.getRk().put(state, destStates);
+			  }
+		  }
+	  }
+  }
+  
+  private static void connectInboundEdgesUnder(ArrayList<ComplexState> previousStates, KripkeSt a, ComplexState state, KripkeSt m)
   {
 	  Boolean isConnect = false;
 	  for(ComplexState prev: previousStates)  //connect back transition
@@ -226,7 +311,7 @@ private ArrayList<KripkeSt> b;
 		  for(State stateInPrevState: prev.getContainingStates())
 		  {
 			  isConnect = false;
-			  ArrayList<ComplexState> destinationStates = a.getRk().get(stateInPrevState.convertToComplexState()); //list of all states that stateInSrc connect to
+			  ArrayList<ComplexState> destinationStates = m.getRk().get(stateInPrevState.convertToComplexState()); //list of all states that stateInSrc connect to
 			  if(destinationStates != null)
 			  {
 				  for(ComplexState stateInDest: destinationStates)
@@ -255,6 +340,106 @@ private ArrayList<KripkeSt> b;
 			  }
 		  }
 	  }		
+	  
+  }
+  
+  /**
+   * 
+   * @param previousStates
+   * @param a
+   * @param state
+   */
+  private static void connectInboundEdgesOver(ArrayList<ComplexState> previousStates, KripkeSt a, ComplexState state, KripkeSt m)
+  {
+	  Boolean isConnect = false;
+	  for(ComplexState prev: previousStates)  //connect back transition
+	  {
+		  for(State stateInPrevState: prev.getContainingStates())
+		  {
+			  isConnect = false;
+			  ArrayList<ComplexState> destinationStates = m.getRk().get(stateInPrevState.convertToComplexState()); //list of all states that stateInSrc connect to
+			  if(destinationStates != null)
+			  {
+				  for(ComplexState stateInDest: destinationStates)
+				  {
+					  if(state.getContainingStates().contains(stateInDest.convertToState()))
+					  {
+						  isConnect = true;
+						  break;
+					  }
+				  }
+			  }
+			  if(isConnect)
+				  break;
+		  }
+		  if(isConnect)
+		  {
+			  if(a.getRk().containsKey(prev))
+			  {
+				  if(!a.getRk().get(prev).contains(state))
+					  a.getRk().get(prev).add(state);
+			  }
+			  else
+			  {
+				  ArrayList<ComplexState> destStates = new ArrayList<ComplexState>();
+				  destStates.add(state);
+				  a.getRk().put(state, destStates);
+			  }
+		  }
+		  else
+		  {
+			  a.removeTransitionRelation(prev, state);
+		  }
+	  }		  
+  }
+  
+	private static void removeTransition(ComplexState src, KripkeSt a)
+	{
+		Iterator<Map.Entry<ComplexState, ArrayList<ComplexState>>> iter = a.getRk().entrySet().iterator();
+		while (iter.hasNext()) {
+		    Map.Entry<ComplexState, ArrayList<ComplexState>> entry = iter.next();
+		    if(src.equals(entry.getKey())){
+		        iter.remove();
+		    }
+		}
+	}
+	
+  private static void connectOutboundEdgesOver(KripkeSt a, ComplexState state, KripkeSt m) throws CloneNotSupportedException
+  {
+	  ArrayList<ComplexState> destinationStates;
+	  removeTransition(state, a);
+	  KripkeSt copyOfkripke;
+		copyOfkripke = m.getClone();
+	  for(State stateInSrc: state.getContainingStates())
+	  {
+		  ComplexState temp = new ComplexState(stateInSrc.getName());
+		  destinationStates = copyOfkripke.getRk().get(temp); //list of all states that stateInSrc connect to
+		  if(destinationStates != null)
+		  {
+			  for(ComplexState stateInDest: destinationStates)
+			  {
+				  for(ComplexState complexStateDest: a.getStates())
+				  {
+					  if(complexStateDest.getContainingStates().contains(stateInDest.convertToState()))
+					  {
+						  //connect state to complexStateDest
+						  if(a.getRk().containsKey(state))
+						  {
+							  if(!a.getRk().get(state).contains(complexStateDest))
+								  a.getRk().get(state).add(complexStateDest);
+						  }
+						  else
+						  {
+							  ArrayList<ComplexState> destStates = new ArrayList<ComplexState>();
+							  destStates.add(complexStateDest);
+							  a.getRk().put(state, destStates);
+						  }
+						  break;
+					  }
+				  }
+			  }
+		  }
+	  }
 	  
   }
   

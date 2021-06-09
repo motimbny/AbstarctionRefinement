@@ -50,7 +50,8 @@ public class State implements Cloneable
 		return containedStates;
 	}
 	public void setContainedStates(ArrayList<State> containedStates) {
-		this.containedStates = containedStates;
+		for(State containedState: containedStates)
+			this.containedStates.add(containedState);
 	}
 	public boolean isAccept() {
 		return accept;

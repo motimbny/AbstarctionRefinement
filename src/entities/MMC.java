@@ -6,7 +6,6 @@ import enums.Quantifier;
 
 public class MMC 
 {
-	private int i=16;
    public boolean runMMC(ArrayList<KripkeSt> m, ArrayList<Quantifier> p)
    {
 	   return true;
